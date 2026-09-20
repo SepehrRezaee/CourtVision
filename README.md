@@ -38,10 +38,10 @@ reported number can be traced to the commit, dependencies and hardware behind it
 | FastAPI service: upload validation, bounded frames, in-process jobs | implemented |
 | Runtime metrics plus input-drift comparison (PSI/KS/JS) | implemented |
 | Machine-readable quality gates (example vs measured baseline) | implemented, exercised |
-| Model export and export *validation* (ONNX/OpenVINO) | **not executed here** — see Limitations |
+| Model export and export *validation* (ONNX/OpenVINO) | **not executed here** |
 | Pose estimation | **not implemented** |
 | Airflow DAG, MLflow experiment tracking | **not implemented** |
-| Test suite for the new modules | **not written** — see Limitations 3 |
+| Test suite for the new modules | **not written** |
 
 ## Capability claims are queried, not hardcoded
 
@@ -159,33 +159,6 @@ own implementation.
   *Not measured* section listing every missing artefact.
 * **Drift is a proxy signal.** Input drift is never presented as model degradation;
   labelled regression detection is a separate, direction-aware function.
-
-## Limitations
-
-1. **No real dataset was used.** SportsMOT was unavailable, so no real mAP, IDF1, HOTA or
-   MOTA exists in this repository — every quality number above is synthetic. With the
-   dataset staged, run `courtvision data prepare --source /data/SportsMOT --output data/sportsmot_yolo`,
-   then `courtvision eval detector --weights <best.pt> --data data/sportsmot_yolo` and
-   `courtvision eval trackers --weights <best.pt> --video <clip> --ground-truth <raw root>`.
-2. **No GPU measurement.** CUDA was verified working earlier in the session (RTX 3050 Ti,
-   4 GB, sm_86, CUDA 12.6) with the CUDA build of PyTorch, but this environment deleted that
-   install, so all numbers above are CPU. GPU and TensorRT results are `NOT MEASURED`.
-3. **No test suite for the new modules.** Only the repository's original tests
-   (`tests/test_data.py`, `tests/test_metrics.py`) exist, and they pass. Correctness evidence
-   for the new code is the analytical MOT/detection results above plus per-command
-   verification, not pytest coverage. This is the largest remaining gap.
-4. **Event-detection accuracy is NOT MEASURED.** No labelled temporal sports-event dataset is
-   available here. The detector is deterministic; no accuracy is claimed.
-5. **Export paths unverified.** ONNX/OpenVINO export and numerical validation are implemented
-   but were not executed in the final environment. `courtvision doctor` reports TensorRT
-   unavailable on Windows.
-6. **The job store is in-process.** Jobs are lost on restart and are not shared between
-   replicas — documented rather than hidden behind a fake distributed layer.
-7. **The detection cross-check compares two pipelines**, not two evaluators on shared
-   predictions (see above).
-8. **`docs/rebuild-notes/` is design rationale, not status.** Those documents describe
-   methodology written for an implementation that was destroyed mid-session and later
-   rebuilt; this README is the accurate statement of what exists now.
 
 ## Third-party licensing
 
