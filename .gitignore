@@ -11,3 +11,4 @@ weights/
 *.engine
 .DS_Store
 .mimosa/
+/*.json
