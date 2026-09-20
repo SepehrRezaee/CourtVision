@@ -1,0 +1,14 @@
+model: yolo26x.pt
+imgsz: 1280
+epochs: 100
+batch: -1
+device: 0
+workers: 8
+seed: 42
+patience: 20
+optimizer: auto
+cos_lr: true
+close_mosaic: 10
+tracker: tracktrack.yaml
+conf: 0.25
+iou: 0.7
