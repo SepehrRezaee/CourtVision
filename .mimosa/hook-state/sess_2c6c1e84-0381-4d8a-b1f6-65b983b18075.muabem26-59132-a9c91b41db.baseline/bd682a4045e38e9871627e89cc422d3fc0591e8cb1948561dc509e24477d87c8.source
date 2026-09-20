@@ -46,39 +46,6 @@ def _load_mot(path: str | Path) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=MOT_COLUMNS)
 
 
-def _iou_distance_matrix(gt_boxes, pred_boxes, iou_threshold: float):
-    """IoU distance matrix for motmetrics: ``1 - IoU`` with ``NaN`` below threshold.
-
-    Built here rather than via ``motmetrics.distances.iou_matrix`` on purpose: that
-    helper calls ``np.asfarray``, which NumPy 2.0 removed, so it raises
-    ``AttributeError`` on any modern NumPy — which ``pyproject.toml`` permits.
-
-    ``NaN`` is motmetrics' marker for "do not pair", so pairs whose IoU is below the
-    threshold are dropped here.
-    """
-    import numpy as np
-
-    gt = np.asarray(gt_boxes, dtype=float).reshape(-1, 4)
-    pred = np.asarray(pred_boxes, dtype=float).reshape(-1, 4)
-    if len(gt) == 0 or len(pred) == 0:
-        return np.empty((len(gt), len(pred)), dtype=float)
-
-    # Boxes arrive as (x, y, w, h); convert to (x1, y1, x2, y2) for the IoU.
-    g = np.stack([gt[:, 0], gt[:, 1], gt[:, 0] + gt[:, 2], gt[:, 1] + gt[:, 3]], axis=1)
-    p = np.stack([pred[:, 0], pred[:, 1], pred[:, 0] + pred[:, 2], pred[:, 1] + pred[:, 3]], axis=1)
-    x1 = np.maximum(g[:, None, 0], p[None, :, 0])
-    y1 = np.maximum(g[:, None, 1], p[None, :, 1])
-    x2 = np.minimum(g[:, None, 2], p[None, :, 2])
-    y2 = np.minimum(g[:, None, 3], p[None, :, 3])
-    inter = np.clip(x2 - x1, 0, None) * np.clip(y2 - y1, 0, None)
-    g_area = np.clip(g[:, 2] - g[:, 0], 0, None) * np.clip(g[:, 3] - g[:, 1], 0, None)
-    p_area = np.clip(p[:, 2] - p[:, 0], 0, None) * np.clip(p[:, 3] - p[:, 1], 0, None)
-    union = g_area[:, None] + p_area[None, :] - inter
-    with np.errstate(divide="ignore", invalid="ignore"):
-        iou = np.where(union > 0, inter / union, 0.0)
-    return np.where(iou < iou_threshold, np.nan, 1.0 - iou)
-
-
 def evaluate_mot(ground_truth: str | Path, prediction: str | Path, iou_threshold: float = 0.5) -> dict:
     gt = _load_mot(ground_truth)
     pred = _load_mot(prediction)
@@ -87,21 +54,12 @@ def evaluate_mot(ground_truth: str | Path, prediction: str | Path, iou_threshold
     for frame_id in frames:
         g = gt[gt["frame"].astype(int) == frame_id]
         p = pred[pred["frame"].astype(int) == frame_id]
-        distances = _iou_distance_matrix(
+        distances = mm.distances.iou_matrix(
             g[["x", "y", "w", "h"]].to_numpy(dtype=float),
             p[["x", "y", "w", "h"]].to_numpy(dtype=float),
-            iou_threshold,
+            max_iou=1 - iou_threshold,
         )
         acc.update(g["id"].astype(int).tolist(), p["id"].astype(int).tolist(), distances)
-    metrics = [
-        "mota",
-        "motp",
-        "idf1",
-        "precision",
-        "recall",
-        "num_switches",
-        "mostly_tracked",
-        "mostly_lost",
-    ]
+    metrics = ["mota", "motp", "idf1", "precision", "recall", "num_switches", "mostly_tracked", "mostly_lost"]
     summary = mm.metrics.create().compute(acc, metrics=metrics, name="courtvision")
     return {name: float(summary.loc["courtvision", name]) for name in metrics}

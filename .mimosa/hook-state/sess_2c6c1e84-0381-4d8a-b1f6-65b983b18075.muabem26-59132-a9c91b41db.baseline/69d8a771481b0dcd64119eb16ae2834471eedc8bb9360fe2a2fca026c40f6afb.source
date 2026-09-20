@@ -42,32 +42,13 @@ def parse_mot_line(line: str) -> Box:
 
 
 def mot_to_yolo(box: Box, image_width: int, image_height: int) -> tuple[float, float, float, float]:
-    """Convert a pixel-space MOT box to normalised YOLO ``(cx, cy, w, h)``.
-
-    The box is clipped in *pixel* space before normalisation. Clipping the four
-    normalised outputs independently (the previous behaviour) makes them stop
-    describing the same rectangle: a box at ``x=180..220`` in a 200px frame became
-    ``cx=1.0, w=0.2``, i.e. a label 20px outside the image whose centre sat on the
-    edge instead of at the true clipped centre 190.
-    """
     if image_width <= 0 or image_height <= 0:
         raise ValueError("Image dimensions must be positive")
-    if not (box.w > 0.0 and box.h > 0.0):
-        raise ValueError(f"Cannot convert a degenerate box: {box!r}")
-    x1 = min(max(box.x, 0.0), float(image_width))
-    y1 = min(max(box.y, 0.0), float(image_height))
-    x2 = min(max(box.x + box.w, 0.0), float(image_width))
-    y2 = min(max(box.y + box.h, 0.0), float(image_height))
-    clipped_w = x2 - x1
-    clipped_h = y2 - y1
-    if clipped_w <= 0.0 or clipped_h <= 0.0:
-        raise ValueError(f"Box lies entirely outside the image: {box!r}")
-    return (
-        (x1 + clipped_w / 2.0) / image_width,
-        (y1 + clipped_h / 2.0) / image_height,
-        clipped_w / image_width,
-        clipped_h / image_height,
-    )
+    cx = (box.x + box.w / 2.0) / image_width
+    cy = (box.y + box.h / 2.0) / image_height
+    w = box.w / image_width
+    h = box.h / image_height
+    return tuple(max(0.0, min(1.0, v)) for v in (cx, cy, w, h))
 
 
 def read_seqinfo(sequence_dir: Path) -> tuple[int, int]:
