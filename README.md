@@ -73,31 +73,10 @@ src/courtvision/
   pipeline/            runner.py quality_gates.py
   reports/             builder.py (assembles REPORT.md from artefacts on disk)
 configs/               base.yaml, accuracy/throughput/cpu profiles, quality_gates.yaml
-reports/               committed measurement evidence (see below)
+reports/               measurement evidence from real runs
 tests/                 the repository's original tests
 docs/rebuild-notes/    audit findings and design rationale
 ```
-
-## What is committed and what is generated
-
-`.gitignore` keeps datasets, training runs and model weights out of git: `data/` (SportsMOT is
-tens of gigabytes and separately licensed, and the prepared tree is derived), `runs/`,
-`weights/`, and every `*.pt` / `*.onnx` / `*.engine` artefact.
-
-`reports/` is **intentionally tracked**. It holds the measurement evidence — validation
-output, detection metrics, per-frame benchmark rows, the generated `REPORT.md` and the
-quality-gate results. Those files are small and reproducing them needs the licensed dataset
-and specific hardware, so they are committed instead. A side effect is that running
-`courtvision benchmark` or `courtvision report` shows up as a diff; that diff is the record
-of the run.
-
-One caveat worth knowing: `reports/**/environment.json` and `reports/benchmarks/system.json`
-describe the machine that produced a number (OS, CPU, GPU, absolute paths). They are the
-provenance for a result, but they do describe your machine.
-
-Lint is enforced in CI (`ruff check src tests`). Formatting is configured but **not**
-enforced, so `ruff format src tests` currently rewrites files; run it once if you want the
-formatter to own the layout.
 
 ## Measured results
 
