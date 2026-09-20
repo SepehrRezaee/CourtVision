@@ -1,0 +1,393 @@
+{
+  "root": "data\\synth\\train",
+  "generated_at": "2026-09-20T21:32:41+00:00",
+  "options": {
+    "decode_sample": 5,
+    "allowed_class_ids": [
+      1
+    ],
+    "min_track_length": 2,
+    "bounds_tolerance": 1.0
+  },
+  "passed": true,
+  "totals": {
+    "sequences": 9,
+    "images": 216,
+    "annotations": 906,
+    "tracks": 54,
+    "errors": 0,
+    "warnings": 0
+  },
+  "issue_counts": {
+    "SHORT_TRACK": 9,
+    "ZERO_CONFIDENCE_ANNOTATION": 9
+  },
+  "by_sport": {
+    "basketball": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 293,
+      "tracks": 18
+    },
+    "football": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 310,
+      "tracks": 18
+    },
+    "volleyball": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 303,
+      "tracks": 18
+    }
+  },
+  "by_split": {
+    "train": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 321,
+      "tracks": 18
+    },
+    "test": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 298,
+      "tracks": 18
+    },
+    "val": {
+      "sequences": 3,
+      "images": 72,
+      "annotations": 287,
+      "tracks": 18
+    }
+  },
+  "sequences": [
+    {
+      "name": "basketball_01",
+      "path": "data\\synth\\train\\basketball_01",
+      "sport": "basketball",
+      "split": "train",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 102,
+      "annotations_kept": 102,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 102
+      },
+      "mean_boxes_per_frame": 4.25
+    },
+    {
+      "name": "basketball_02",
+      "path": "data\\synth\\train\\basketball_02",
+      "sport": "basketball",
+      "split": "test",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 97,
+      "annotations_kept": 97,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 97
+      },
+      "mean_boxes_per_frame": 4.0417
+    },
+    {
+      "name": "basketball_03",
+      "path": "data\\synth\\train\\basketball_03",
+      "sport": "basketball",
+      "split": "val",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 94,
+      "annotations_kept": 94,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 94
+      },
+      "mean_boxes_per_frame": 3.9167
+    },
+    {
+      "name": "football_01",
+      "path": "data\\synth\\train\\football_01",
+      "sport": "football",
+      "split": "val",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 92,
+      "annotations_kept": 92,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 92
+      },
+      "mean_boxes_per_frame": 3.8333
+    },
+    {
+      "name": "football_02",
+      "path": "data\\synth\\train\\football_02",
+      "sport": "football",
+      "split": "test",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 106,
+      "annotations_kept": 106,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 106
+      },
+      "mean_boxes_per_frame": 4.4167
+    },
+    {
+      "name": "football_03",
+      "path": "data\\synth\\train\\football_03",
+      "sport": "football",
+      "split": "train",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 112,
+      "annotations_kept": 112,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 112
+      },
+      "mean_boxes_per_frame": 4.6667
+    },
+    {
+      "name": "volleyball_01",
+      "path": "data\\synth\\train\\volleyball_01",
+      "sport": "volleyball",
+      "split": "test",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 95,
+      "annotations_kept": 95,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 95
+      },
+      "mean_boxes_per_frame": 3.9583
+    },
+    {
+      "name": "volleyball_02",
+      "path": "data\\synth\\train\\volleyball_02",
+      "sport": "volleyball",
+      "split": "train",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 107,
+      "annotations_kept": 107,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 107
+      },
+      "mean_boxes_per_frame": 4.4583
+    },
+    {
+      "name": "volleyball_03",
+      "path": "data\\synth\\train\\volleyball_03",
+      "sport": "volleyball",
+      "split": "val",
+      "width": 640,
+      "height": 360,
+      "declared_length": 24,
+      "frame_rate": 25,
+      "images": 24,
+      "frames_with_gt": 24,
+      "annotations": 101,
+      "annotations_kept": 101,
+      "annotations_dropped": 1,
+      "tracks": 6,
+      "classes": {
+        "1": 101
+      },
+      "mean_boxes_per_frame": 4.2083
+    }
+  ],
+  "issues": [
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "basketball_01",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "basketball_01",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "basketball_02",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "basketball_02",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "basketball_03",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "basketball_03",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "football_01",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "football_01",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "football_02",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "football_02",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "football_03",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "football_03",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "volleyball_01",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "volleyball_01",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "volleyball_02",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "volleyball_02",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    },
+    {
+      "code": "ZERO_CONFIDENCE_ANNOTATION",
+      "severity": "info",
+      "sequence": "volleyball_03",
+      "frame": 1,
+      "track_id": 6,
+      "detail": "confidence=0.0: not a reviewed target"
+    },
+    {
+      "code": "SHORT_TRACK",
+      "severity": "info",
+      "sequence": "volleyball_03",
+      "frame": null,
+      "track_id": 6,
+      "detail": "track 6 has only 1 annotation(s)"
+    }
+  ]
+}

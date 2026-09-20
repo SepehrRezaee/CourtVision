@@ -1,0 +1,5 @@
+group,images,gt_boxes,predictions,map50,map50_95,precision,recall
+basketball,24,93,116,0.087609,0.022291,0.588235,0.107527
+football,24,91,129,0.0,0.0,0.0,0.0
+overall,72,284,323,0.028218,0.007481,0.357143,0.035211
+volleyball,24,100,78,0.0,0.0,0.0,0.0

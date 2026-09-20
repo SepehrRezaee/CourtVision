@@ -141,10 +141,11 @@ class ClassMetrics:
     gt_boxes: int
     predictions: int
     ap_by_iou: dict[float, float] = field(default_factory=dict)
-    precision: float = 0.0
-    recall: float = 0.0
-    f1: float = 0.0
-    best_f1_confidence: float = 0.0
+    #: ``None`` when no sweep threshold retained a prediction, i.e. undefined rather than 0.
+    precision: float | None = None
+    recall: float | None = None
+    f1: float | None = None
+    best_f1_confidence: float | None = None
     mean_iou_matched: float = 0.0
 
     @property
@@ -164,10 +165,10 @@ class ClassMetrics:
             "predictions": self.predictions,
             "map50": _round(self.map50),
             "map50_95": _round(self.map50_95),
-            "precision": round(self.precision, 6),
-            "recall": round(self.recall, 6),
-            "f1": round(self.f1, 6),
-            "best_f1_confidence": round(self.best_f1_confidence, 6),
+            "precision": _round(self.precision),
+            "recall": _round(self.recall),
+            "f1": _round(self.f1),
+            "best_f1_confidence": _round(self.best_f1_confidence),
             "mean_iou_matched": round(self.mean_iou_matched, 6),
             "ap_by_iou": {str(key): _round(value) for key, value in sorted(self.ap_by_iou.items())},
         }
@@ -185,25 +186,34 @@ class DetectionMetrics:
     pr_curve_50: dict[str, list[float]] = field(default_factory=dict)
     notes: list[str] = field(default_factory=list)
 
+    def _gated_classes(self) -> list[ClassMetrics]:
+        """Classes with ground truth. A class with no GT contributes no AP and no P/R.
+
+        Without this gate a single-class dataset's aggregate precision/recall would be
+        dragged to zero by the detector's other-class false positives — classes that the
+        dataset does not contain and that mAP already ignores.
+        """
+        return [item for item in self.classes.values() if item.gt_boxes > 0]
+
     @property
     def map50(self) -> float:
-        values = [item.map50 for item in self.classes.values() if not np.isnan(item.map50)]
+        values = [item.map50 for item in self._gated_classes() if not np.isnan(item.map50)]
         return float(np.mean(values)) if values else float("nan")
 
     @property
     def map50_95(self) -> float:
-        values = [item.map50_95 for item in self.classes.values() if not np.isnan(item.map50_95)]
+        values = [item.map50_95 for item in self._gated_classes() if not np.isnan(item.map50_95)]
         return float(np.mean(values)) if values else float("nan")
 
     @property
-    def precision(self) -> float:
-        values = [item.precision for item in self.classes.values()]
-        return float(np.mean(values)) if values else float("nan")
+    def precision(self) -> float | None:
+        values = [item.precision for item in self._gated_classes() if item.precision is not None]
+        return float(np.mean(values)) if values else None
 
     @property
-    def recall(self) -> float:
-        values = [item.recall for item in self.classes.values()]
-        return float(np.mean(values)) if values else float("nan")
+    def recall(self) -> float | None:
+        values = [item.recall for item in self._gated_classes() if item.recall is not None]
+        return float(np.mean(values)) if values else None
 
     def to_dict(self) -> dict:
         return {
@@ -237,7 +247,12 @@ def _round(value, digits: int = 6):
 class DetectionEvalOptions:
     iou_thresholds: tuple[float, ...] = DEFAULT_IOU_THRESHOLDS
     class_names: Mapping[int, str] = field(default_factory=lambda: {0: "player"})
-    sweep_confidences: tuple[float, ...] = (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+    #: Includes sub-0.05 thresholds so a low-confidence operating point is still found:
+    #: on some data every prediction scores below 0.05, and a sweep that starts at 0.05
+    #: would report P/R as undefined even though predictions exist.
+    sweep_confidences: tuple[float, ...] = (
+        0.001, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9
+    )
     min_confidence: float = 0.001
     max_detections_per_image: int | None = 300
 
@@ -337,18 +352,24 @@ def _evaluate_class(
         ap, _recall, _precision = _average_precision(flags, ~flags, n_gt)
         ap_by_iou[threshold] = ap
 
-    rows = [row for row in sweep if row["class_id"] == class_id]
+    rows = [row for row in sweep if row["class_id"] == class_id and row["predictions"] > 0]
     best = max(rows, key=lambda row: row["f1"], default=None)
+    # Precision/recall are reported at the best-F1 operating point, and are UNDEFINED
+    # (None) rather than 0.0 when either there is no ground truth for this class or no
+    # sweep threshold retained a prediction. Reporting 0.0 would look like a
+    # measurement, while AP — which integrates over all predictions, including
+    # very-low-confidence ones — can still be non-zero.
+    defined = best is not None and n_gt > 0
     return ClassMetrics(
         class_id=class_id,
         class_name=str(options.class_names.get(class_id, f"class_{class_id}")),
         gt_boxes=n_gt,
         predictions=sum(1 for boxes in pred_by_image.values() for box in boxes if box.class_id == class_id),
         ap_by_iou=ap_by_iou,
-        precision=float(best["precision"]) if best else 0.0,
-        recall=float(best["recall"]) if best else 0.0,
-        f1=float(best["f1"]) if best else 0.0,
-        best_f1_confidence=float(best["confidence"]) if best else 0.0,
+        precision=float(best["precision"]) if defined else None,
+        recall=float(best["recall"]) if defined else None,
+        f1=float(best["f1"]) if defined else None,
+        best_f1_confidence=float(best["confidence"]) if defined else None,
         mean_iou_matched=float(np.mean(ious_matched)) if ious_matched else 0.0,
     )
 
@@ -580,7 +601,15 @@ def cross_check_detection_metrics(
     return {
         "status": "agree" if agree else "disagree",
         "comparisons": comparisons,
-        "note": "Precision/recall are not compared; the two implementations use different operating points.",
+        "note": (
+            "This compares two END-TO-END pipelines, not two evaluators on identical input: ours "
+            "scores the predictions from our own predict() call while the reference re-runs "
+            "inference inside val() with its own batching, rect settings and max_det. A small delta "
+            "is therefore expected and is not by itself evidence of an evaluator bug. To compare "
+            "evaluators cleanly, score one shared prediction set with both (e.g. val(save_json=True) "
+            "COCO output). Precision/recall is likewise not compared, since the two use different "
+            "operating points."
+        ),
     }
 
 

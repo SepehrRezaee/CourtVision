@@ -1,0 +1,127 @@
+{
+  "label": "yolo26n_botsort_480",
+  "plan": {
+    "warmup_frames": 5,
+    "measured_frames": 60,
+    "repeats": 1,
+    "percentiles": [
+      50.0,
+      95.0
+    ],
+    "preload_frames": true,
+    "max_decode_frames": null
+  },
+  "config": {
+    "weights": "yolo26n.pt",
+    "tracker": "botsort.yaml",
+    "imgsz": 480,
+    "device": "cpu",
+    "conf": 0.25
+  },
+  "decode": {
+    "source": "data\\clips\\synthetic_track.mp4",
+    "frames": 90,
+    "decode_seconds": 0.044898,
+    "decode_ms_per_frame": 0.4989,
+    "declared_fps": 25.0,
+    "frame_size": [
+      640,
+      360
+    ],
+    "preloaded": true
+  },
+  "system": {
+    "timestamp_utc": "2026-09-20T21:35:45+00:00",
+    "python_version": "3.11.15",
+    "git": {
+      "commit": "0d53d178aac929bf7fc4d73ad3dd72276c7f9290",
+      "branch": "main",
+      "dirty": true
+    },
+    "packages": {
+      "ultralytics": "8.4.156",
+      "torch": "2.14.0",
+      "torchvision": "0.29.0",
+      "numpy": "2.4.6",
+      "opencv-python": "5.0.0.93",
+      "opencv-python-headless": "5.0.0.93",
+      "motmetrics": "1.4.0",
+      "fastapi": "0.141.1",
+      "uvicorn": "0.53.0",
+      "pydantic": "2.13.5",
+      "PyYAML": "6.0.3",
+      "trackeval": "1.0.dev1"
+    },
+    "hardware": {
+      "platform": "Windows-10-10.0.26200-SP0",
+      "system": "Windows",
+      "machine": "AMD64",
+      "cpu_count": 16,
+      "gpu": null,
+      "gpu_count": 0,
+      "gpus": [],
+      "cuda_available": false,
+      "cuda_version": null,
+      "cudnn_version": null,
+      "torch_version": "2.14.0+cpu"
+    },
+    "seed": null,
+    "command": null
+  },
+  "summary": {
+    "frames": 60,
+    "pooled": {
+      "preprocess_ms_mean_of_repeats": 0.9538,
+      "inference_ms_mean_of_repeats": 27.4165,
+      "tracking_and_post_ms_mean_of_repeats": 3.2733,
+      "end_to_end_ms_mean_of_repeats": 31.6437,
+      "detections_mean_of_repeats": 1.8,
+      "tracks_mean_of_repeats": 1.8
+    },
+    "rows": [
+      {
+        "repeat": "1",
+        "frames": 60,
+        "preprocess_ms_mean": 0.9538,
+        "preprocess_ms_std": 0.143,
+        "preprocess_ms_min": 0.7203,
+        "preprocess_ms_max": 1.2654,
+        "preprocess_ms_p50": 0.9607,
+        "preprocess_ms_p95": 1.2005,
+        "inference_ms_mean": 27.4165,
+        "inference_ms_std": 3.4944,
+        "inference_ms_min": 22.41,
+        "inference_ms_max": 35.6963,
+        "inference_ms_p50": 27.7574,
+        "inference_ms_p95": 34.4441,
+        "tracking_and_post_ms_mean": 3.2733,
+        "tracking_and_post_ms_std": 0.4405,
+        "tracking_and_post_ms_min": 2.171,
+        "tracking_and_post_ms_max": 4.7047,
+        "tracking_and_post_ms_p50": 3.2595,
+        "tracking_and_post_ms_p95": 3.8329,
+        "end_to_end_ms_mean": 31.6437,
+        "end_to_end_ms_std": 3.7031,
+        "end_to_end_ms_min": 26.2178,
+        "end_to_end_ms_max": 40.1099,
+        "end_to_end_ms_p50": 31.9492,
+        "end_to_end_ms_p95": 38.3522,
+        "detections_mean": 1.8,
+        "detections_std": 1.0132,
+        "detections_min": 0.0,
+        "detections_max": 4.0,
+        "detections_p50": 2.0,
+        "detections_p95": 3.0,
+        "tracks_mean": 1.8,
+        "tracks_std": 1.0132,
+        "tracks_min": 0.0,
+        "tracks_max": 4.0,
+        "tracks_p50": 2.0,
+        "tracks_p95": 3.0,
+        "fps_from_mean": 31.6019
+      }
+    ]
+  },
+  "warnings": [],
+  "raw_rows": 60
+}

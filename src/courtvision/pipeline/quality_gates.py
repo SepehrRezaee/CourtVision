@@ -117,12 +117,19 @@ class GateSet:
     @classmethod
     def from_dict(cls, data: Mapping[str, Any]) -> "GateSet":
         raw_gates = data.get("gates", data.get("quality_gates", {}))
-        if not isinstance(raw_gates, Mapping):
-            raise GateConfigError("'gates' must be a mapping of name -> {min|max}")
+        if isinstance(raw_gates, list):
+            # A saved gate set serialises as a list of gate dicts. An empty list is a
+            # valid (if useless) gate set and must reload rather than raise, otherwise a
+            # file written by --write-baseline with nothing to gate cannot be read back.
+            gates = [Gate.from_dict(item, name=str(item.get("metric", index))) for index, item in enumerate(raw_gates)]
+        elif isinstance(raw_gates, Mapping):
+            gates = [Gate.from_dict(spec, name=name) for name, spec in raw_gates.items()]
+        else:
+            raise GateConfigError("'gates' must be a mapping of name -> {min|max}, or a list of gate objects")
         return cls(
             name=str(data.get("name", "quality_gates")),
             kind=str(data.get("kind", "example")),
-            gates=[Gate.from_dict(spec, name=name) for name, spec in raw_gates.items()],
+            gates=gates,
             source=data.get("source"),
             generated_at=data.get("generated_at"),
             notes=[str(note) for note in data.get("notes", [])],
@@ -288,11 +295,14 @@ def save_gate_set(gate_set: GateSet, path: str | Path) -> Path:
 
 
 def default_gate_metrics() -> Sequence[str]:
-    """Metric paths a complete detection+tracking report should gate on."""
+    """Metric paths a complete detection+tracking report should gate on.
+
+    Paths are relative to ``report.json``, where every artefact sits under ``artifacts``.
+    """
     return (
-        "detection_metrics.groups.overall.map50_95",
-        "detection_metrics.groups.overall.map50",
-        "tracking_metrics.aggregate.idf1",
-        "tracking_metrics.aggregate.mota",
-        "tracking_metrics.aggregate.num_switches",
+        "artifacts.detection_metrics.groups.overall.map50_95",
+        "artifacts.detection_metrics.groups.overall.map50",
+        "artifacts.tracking_metrics.aggregate.idf1",
+        "artifacts.tracking_metrics.aggregate.mota",
+        "artifacts.tracking_metrics.aggregate.num_switches",
     )

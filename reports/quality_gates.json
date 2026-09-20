@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "passed": true,
+  "generated_at": "2026-09-20T21:37:11+00:00",
+  "measurements_file": "reports\\latest\\report.json",
+  "gate_set": {
+    "name": "measured-baseline",
+    "kind": "baseline",
+    "source": "configs\\quality_gates.yaml",
+    "generated_at": "2026-09-20T21:37:10+00:00",
+    "notes": [
+      "Thresholds derived from a measured run of this repository.",
+      "Relative tolerance applied: 0.0500.",
+      "Metrics requested but absent from the measurements (not gated): ['artifacts.tracking_metrics.aggregate.idf1', 'artifacts.tracking_metrics.aggregate.mota', 'artifacts.tracking_metrics.aggregate.num_switches']"
+    ],
+    "is_quality_claim": true,
+    "gates": [
+      {
+        "metric": "artifacts.detection_metrics.groups.overall.map50_95",
+        "min": 0.00710695,
+        "max": null,
+        "description": "baseline (higher is better)",
+        "required": true
+      },
+      {
+        "metric": "artifacts.detection_metrics.groups.overall.map50",
+        "min": 0.0268071,
+        "max": null,
+        "description": "baseline (higher is better)",
+        "required": true
+      }
+    ]
+  },
+  "is_quality_claim": true,
+  "criteria_total": 2,
+  "criteria_failed": 0,
+  "failures": [],
+  "outcomes": [
+    {
+      "metric": "artifacts.detection_metrics.groups.overall.map50_95",
+      "passed": true,
+      "message": "artifacts.detection_metrics.groups.overall.map50_95=0.007481 ok",
+      "value": 0.007481,
+      "gate": {
+        "metric": "artifacts.detection_metrics.groups.overall.map50_95",
+        "min": 0.00710695,
+        "max": null,
+        "description": "baseline (higher is better)",
+        "required": true
+      }
+    },
+    {
+      "metric": "artifacts.detection_metrics.groups.overall.map50",
+      "passed": true,
+      "message": "artifacts.detection_metrics.groups.overall.map50=0.028218 ok",
+      "value": 0.028218,
+      "gate": {
+        "metric": "artifacts.detection_metrics.groups.overall.map50",
+        "min": 0.0268071,
+        "max": null,
+        "description": "baseline (higher is better)",
+        "required": true
+      }
+    }
+  ],
+  "warnings": []
+}

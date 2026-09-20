@@ -1,0 +1,13 @@
+kind,group,images,gt_boxes,predictions,map50,map50_95,precision,recall
+detection,basketball,24,93,116,0.087609,0.022291,0.588235,0.107527
+detection,football,24,91,129,0.0,0.0,0.0,0.0
+detection,overall,72,284,323,0.028218,0.007481,0.357143,0.035211
+detection,volleyball,24,100,78,0.0,0.0,0.0,0.0
+runtime,yolo26n_bytetrack_480,,,,,,,
+runtime,yolo26n_bytetrack_640,,,,,,,
+runtime,yolo26n_botsort_480,,,,,,,
+runtime,yolo26n_botsort_640,,,,,,,
+runtime,yolo26s_bytetrack_480,,,,,,,
+runtime,yolo26s_bytetrack_640,,,,,,,
+runtime,yolo26s_botsort_480,,,,,,,
+runtime,yolo26s_botsort_640,,,,,,,
