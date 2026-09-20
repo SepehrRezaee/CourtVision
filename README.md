@@ -1,9 +1,5 @@
 # CourtVision — Production Sports Video Analytics
 
-A portfolio-grade applied computer-vision project demonstrating the complete ML lifecycle:
-
-**data preparation → detector fine-tuning → player tracking → quantitative evaluation → latency benchmarking → FastAPI/Docker deployment**
-
 CourtVision uses SportsMOT for basketball, volleyball, and football footage, a YOLO26 detector, and configurable multi-object trackers.
 
 ## What this proves
