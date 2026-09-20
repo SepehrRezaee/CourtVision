@@ -1,14 +1,14 @@
 {
   "schemaVersion": "mimosa-hook-status/v1",
-  "recordedAt": "2026-09-20T21:24:16.106Z",
+  "recordedAt": "2026-09-20T21:28:53.250Z",
   "sessionId": "sess_2c6c1e84-0381-4d8a-b1f6-65b983b18075",
   "event": "PostToolUse",
   "toolName": "Write",
-  "file": "src/courtvision/optimization/__init__.py",
+  "file": "src/courtvision/analytics/events.py",
   "outcome": "clear",
   "coverage": "complete",
   "findingCount": 0,
-  "durationMs": 19,
+  "durationMs": 10,
   "hostState": "hook_complete",
   "reportHint": ".mimosa/reports/"
 }
