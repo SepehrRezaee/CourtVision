@@ -114,6 +114,3 @@ Built an end-to-end sports video analytics pipeline on SportsMOT, covering seque
 
 After running the project, replace generic wording with your *measured* mAP, IDF1/MOTA, p95 latency, FPS, hardware, and dataset split.
 
-## Licensing
-
-This is a portfolio/research implementation. Ultralytics packages and model weights have their own licensing terms; review those terms before commercial redistribution or SaaS deployment.
