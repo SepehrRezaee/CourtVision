@@ -1,4 +1,11 @@
-"""Multi-object tracking backends and MOT-format export."""
+"""Multi-object tracking backends and MOT-format export.
+
+The Ultralytics-backed tracker is exposed through a module ``__getattr__`` (PEP 562) so
+importing this package does not pull in the detector. Without that, importing
+``courtvision.tracking.base`` would execute this module, which imports the tracker, which
+imports ``courtvision.detection``, which imports ``courtvision.tracking.base`` again — a
+circular import. Importing ``UltralyticsTracker`` from here still works exactly as before.
+"""
 
 from .base import (
     Detection,
@@ -9,11 +16,6 @@ from .base import (
     filter_detections,
     tracking_result_from_mot,
     tracking_result_to_records,
-)
-from .ultralytics_tracker import (
-    TRACKER_OVERRIDE_KEYS,
-    UltralyticsTracker,
-    export_tracking_artifacts,
 )
 
 __all__ = [
@@ -29,3 +31,17 @@ __all__ = [
     "UltralyticsTracker",
     "export_tracking_artifacts",
 ]
+
+_LAZY = {"UltralyticsTracker", "export_tracking_artifacts", "TRACKER_OVERRIDE_KEYS"}
+
+
+def __getattr__(name: str):
+    if name in _LAZY:
+        from . import ultralytics_tracker
+
+        return getattr(ultralytics_tracker, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__() -> list[str]:
+    return sorted(__all__)

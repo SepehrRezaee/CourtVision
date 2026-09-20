@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: courtvision
+Version: 0.1.0
+Summary: Production sports-video detection, tracking, evaluation, and serving.
+Requires-Python: >=3.10
+Requires-Dist: ultralytics==8.4.156
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]<1,>=0.30
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: opencv-python-headless>=4.10
+Requires-Dist: numpy<3,>=1.26
+Requires-Dist: PyYAML>=6.0
+Requires-Dist: motmetrics>=1.4
+Requires-Dist: pandas>=2.2
+Provides-Extra: dev
+Requires-Dist: pytest>=8.3; extra == "dev"
+Requires-Dist: ruff>=0.8; extra == "dev"
