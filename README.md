@@ -159,9 +159,3 @@ own implementation.
   *Not measured* section listing every missing artefact.
 * **Drift is a proxy signal.** Input drift is never presented as model degradation;
   labelled regression detection is a separate, direction-aware function.
-
-## Third-party licensing
-
-Ultralytics packages, Ultralytics model weights and the SportsMOT dataset carry their own
-licence terms; review them before commercial or SaaS use. TrackEval is pinned to a git commit
-because it is not distributed on PyPI.
