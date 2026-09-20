@@ -69,7 +69,7 @@ class SignalSummary:
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any]) -> "SignalSummary":
+    def from_dict(cls, data: Mapping[str, Any]) -> SignalSummary:
         return cls(
             name=str(data["name"]),
             count=int(data["count"]),

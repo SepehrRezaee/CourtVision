@@ -14,9 +14,9 @@ match each to the highest-IoU unmatched ground-truth box above the threshold.
 from __future__ import annotations
 
 from collections import defaultdict
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
 
 import numpy as np
 
@@ -47,7 +47,7 @@ class DetBox:
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping) -> "DetBox":
+    def from_dict(cls, data: Mapping) -> DetBox:
         return cls(
             image_id=str(data["image_id"]),
             class_id=int(data["class_id"]),

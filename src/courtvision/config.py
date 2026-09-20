@@ -8,9 +8,10 @@ environment variable.
 from __future__ import annotations
 
 import os
+from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 import yaml
 
@@ -206,7 +207,7 @@ class CourtVisionConfig:
     )
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any] | None) -> "CourtVisionConfig":
+    def from_dict(cls, data: Mapping[str, Any] | None) -> CourtVisionConfig:
         data = dict(data or {})
         unknown = set(data) - set(cls.SECTIONS)
         if unknown:
@@ -232,7 +233,7 @@ class CourtVisionConfig:
             kwargs[section] = section_cls(**values)
         return cls(**kwargs)
 
-    def apply_env(self, env: Mapping[str, str] | None = None) -> "CourtVisionConfig":
+    def apply_env(self, env: Mapping[str, str] | None = None) -> CourtVisionConfig:
         env = os.environ if env is None else env
         for section in self.SECTIONS:
             section_obj = getattr(self, section)

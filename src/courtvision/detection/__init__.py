@@ -19,9 +19,9 @@ from .ultralytics_detector import (
 __all__ = [
     "DetectorInfo",
     "DetectorProtocol",
-    "ValidationResult",
     "ModelNotAvailableError",
     "UltralyticsDetector",
+    "ValidationResult",
     "available_trackers",
     "describe_capabilities",
     "downloadable_asset_names",

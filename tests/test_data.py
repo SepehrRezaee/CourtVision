@@ -1,5 +1,7 @@
 import pytest
+
 from courtvision.data import Box, mot_to_yolo, parse_mot_line
+
 
 def test_parse_mot_line() -> None:
     box = parse_mot_line("12,7,100,50,40,80,1,1,0.9")

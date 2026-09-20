@@ -82,7 +82,7 @@ class UltralyticsTracker:
             self._temporary_dir = None
             self._tracker_config_path = None
 
-    def __enter__(self) -> "UltralyticsTracker":
+    def __enter__(self) -> UltralyticsTracker:
         return self
 
     def __exit__(self, *_exc: object) -> None:
@@ -105,7 +105,7 @@ class UltralyticsTracker:
                 f"Unsupported tracker override(s) {sorted(unknown)}; supported: {list(TRACKER_OVERRIDE_KEYS)}"
             )
         base = self._load_base_tracker_config()
-        base.update({key: value for key, value in self.overrides.items()})
+        base.update(dict(self.overrides))
         self._temporary_dir = tempfile.TemporaryDirectory(prefix="courtvision-tracker-")
         path = Path(self._temporary_dir.name) / f"{Path(self.tracker).stem}-override.yaml"
         write_text(path, yaml.safe_dump(base, sort_keys=False))

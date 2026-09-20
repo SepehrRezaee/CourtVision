@@ -105,7 +105,7 @@ class ExportResult:
 def export_model(
     weights: str | Path,
     *,
-    format: str = "onnx",  # noqa: A002 - matches the library/CLI parameter name
+    format: str = "onnx",
     imgsz: int = 640,
     device: str = "cpu",
     half: bool = False,
@@ -137,7 +137,7 @@ def export_model(
     started = time.perf_counter()
     try:
         produced = Path(str(YOLO(str(weights)).export(**kwargs)))
-    except Exception as exc:  # noqa: BLE001 - any backend failure is reportable, not fatal
+    except Exception as exc:
         return ExportResult(
             format=format,
             ok=False,

@@ -23,8 +23,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 from .config import load_config, to_dict
 from .utils import configure_logging, ensure_dir, write_json
@@ -494,7 +495,7 @@ def _trackers(args, config) -> int:
             try:
                 evaluation = evaluate_tracking(
                     ground_truth,
-                    {name: written["mot"] for name in ground_truth},
+                    dict.fromkeys(ground_truth, written["mot"]),
                     with_hota=True,
                 )
             except ValueError as exc:
@@ -557,8 +558,18 @@ def _analyze(args, config) -> int:
 
 
 def _benchmark(args, config) -> int:
-    from .optimization.benchmark import BenchmarkPlan, benchmark_video, save_benchmark, system_report
-    from .optimization.pareto import build_pareto_report, configuration_records_from_reports, plot_pareto, save_pareto_csv
+    from .optimization.benchmark import (
+        BenchmarkPlan,
+        benchmark_video,
+        save_benchmark,
+        system_report,
+    )
+    from .optimization.pareto import (
+        build_pareto_report,
+        configuration_records_from_reports,
+        plot_pareto,
+        save_pareto_csv,
+    )
     from .tracking.ultralytics_tracker import UltralyticsTracker
 
     weights_list = (args.weights or config.detector.model).split(",")

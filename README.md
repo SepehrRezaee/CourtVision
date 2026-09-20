@@ -19,6 +19,9 @@ courtvision gate --write-baseline                     # write gates from *measur
 courtvision serve                                     # FastAPI on :8000
 ```
 
+Every subcommand shares one configuration loader and records the same provenance, so a
+reported number can be traced to the commit, dependencies and hardware behind it.
+
 ## What is implemented
 
 | Area | Status |
@@ -49,7 +52,52 @@ the runtime. Verified against `ultralytics==8.4.156`:
 * YOLO26 assets available: 60, including `yolo26n/s/m/l/x.pt` and `-pose`, `-seg`, `-cls`, `-obb`, `-depth` variants.
 
 The original README's tracker and model claims were checked and are **accurate** — they were
-not stale. The defects in the original code were elsewhere (see the audit notes below).
+not stale. The defects in the original code were elsewhere (see "The two original defects").
+
+## Repository layout
+
+```text
+src/courtvision/
+  config.py            central config: defaults < YAML < COURTVISION_* env < CLI overrides
+  repro.py             git/package/hardware provenance attached to every result
+  utils.py             atomic JSON/CSV writes, structured logging, seeding
+  cli.py               the `courtvision` entry point
+  data/                mot.py validation.py splitting.py conversion.py sportsmot.py synthetic.py
+  detection/           base.py ultralytics_detector.py trainer.py
+  tracking/            base.py ultralytics_tracker.py
+  analytics/           trajectories.py (kinematics, zones) events.py (event detector)
+  evaluation/          detection.py (mAP) tracking.py (motmetrics + TrackEval HOTA)
+  optimization/        benchmark.py export.py pareto.py
+  monitoring/          metrics.py (Prometheus exposition) drift.py (PSI/KS/JS)
+  serving/             schemas.py service.py api.py (FastAPI, in-process jobs)
+  pipeline/            runner.py quality_gates.py
+  reports/             builder.py (assembles REPORT.md from artefacts on disk)
+configs/               base.yaml, accuracy/throughput/cpu profiles, quality_gates.yaml
+reports/               committed measurement evidence (see below)
+tests/                 the repository's original tests
+docs/rebuild-notes/    audit findings and design rationale
+```
+
+## What is committed and what is generated
+
+`.gitignore` keeps datasets, training runs and model weights out of git: `data/` (SportsMOT is
+tens of gigabytes and separately licensed, and the prepared tree is derived), `runs/`,
+`weights/`, and every `*.pt` / `*.onnx` / `*.engine` artefact.
+
+`reports/` is **intentionally tracked**. It holds the measurement evidence — validation
+output, detection metrics, per-frame benchmark rows, the generated `REPORT.md` and the
+quality-gate results. Those files are small and reproducing them needs the licensed dataset
+and specific hardware, so they are committed instead. A side effect is that running
+`courtvision benchmark` or `courtvision report` shows up as a diff; that diff is the record
+of the run.
+
+One caveat worth knowing: `reports/**/environment.json` and `reports/benchmarks/system.json`
+describe the machine that produced a number (OS, CPU, GPU, absolute paths). They are the
+provenance for a result, but they do describe your machine.
+
+Lint is enforced in CI (`ruff check src tests`). Formatting is configured but **not**
+enforced, so `ruff format src tests` currently rewrites files; run it once if you want the
+formatter to own the layout.
 
 ## Measured results
 

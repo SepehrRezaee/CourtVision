@@ -1,14 +1,70 @@
-.venv/
+# Python
 __pycache__/
 *.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+build/
+dist/
+pip-wheel-metadata/
+
+# Tooling caches
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# This workspace's security-scan state (local session data, not project content)
+.mimosa/
+
+# Datasets. Never commit contents: SportsMOT is tens of GB and separately licensed, and
+# `courtvision data prepare` writes a derived tree that is fully regenerable from it.
 data/
+
+# Training runs and downloaded weights
 runs/
 weights/
+
+# Model artefacts. A .pt/.onnx/.engine file is a build output; `courtvision doctor`
+# reports which ones the installed packages can actually produce.
 *.pt
 *.onnx
 *.engine
+*.tflite
+*.mlpackage
+*.torchscript
+*_openvino_model/
+*_saved_model/
+
+# Experiment tracking and orchestration state
+mlruns/
+logs/
+airflow.db
+airflow.cfg
+airflow_home/
+
+# OS / editor
 .DS_Store
-.mimosa/
-.mimosa/hook-status/*.json
+Thumbs.db
+.idea/
+.vscode/
+
+# NOTE: reports/ is deliberately NOT ignored.
+#
+# It holds the measurement evidence for this repository — data validation, detection
+# metrics, per-frame benchmark rows, the generated REPORT.md and the quality-gate
+# results. Those files are small, and reproducing them requires the licensed dataset
+# and specific hardware, so they are committed rather than regenerated. Consequently a
+# run of `courtvision report` or `courtvision benchmark` will show up as a diff: that is
+# intended, and the diff is the record of the run.
+#
+# Caveat: reports/**/environment.json and benchmarks/system.json capture the machine
+# that produced them, including OS, CPU, GPU and absolute paths. They are the provenance
+# for a number, but they do describe your machine.

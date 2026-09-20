@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONUNBUFFERED: "1"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,8 +19,16 @@ jobs:
           python-version: "3.11"
           cache: pip
       - name: Install
+        # The eval extra is intentionally excluded: TrackEval is a git dependency, and
+        # HOTA is optional everywhere (--no-hota is the documented fallback).
         run: pip install -e ".[dev]"
       - name: Lint
-        run: ruff check src scripts tests
+        run: ruff check src tests
       - name: Tests
         run: pytest -q
+      - name: Package installs and the CLI runs
+        # Guards the two things a README quick start depends on: the console script
+        # exists, and the package imports without a dataset or weights.
+        run: |
+          courtvision --version
+          courtvision doctor

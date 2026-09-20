@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
@@ -24,7 +24,12 @@ from typing import Any
 from ..analytics.events import detect_events, event_rate, summarize_events
 from ..analytics.trajectories import analyze_trajectories, track_statistics
 from ..config import ApiConfig, EventConfig, ServingConfig
-from ..detection.ultralytics_detector import available_trackers, describe_capabilities, tracker_is_supported, ultralytics_version
+from ..detection.ultralytics_detector import (
+    available_trackers,
+    describe_capabilities,
+    tracker_is_supported,
+    ultralytics_version,
+)
 from ..tracking.base import TrackingResult
 from ..tracking.ultralytics_tracker import UltralyticsTracker
 from ..utils import get_logger

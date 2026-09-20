@@ -19,17 +19,17 @@ from .base import (
 )
 
 __all__ = [
+    "TRACKER_OVERRIDE_KEYS",
     "Detection",
     "Detector",
     "FrameResult",
     "Tracker",
     "TrackingResult",
+    "UltralyticsTracker",
+    "export_tracking_artifacts",
     "filter_detections",
     "tracking_result_from_mot",
     "tracking_result_to_records",
-    "TRACKER_OVERRIDE_KEYS",
-    "UltralyticsTracker",
-    "export_tracking_artifacts",
 ]
 
 _LAZY = {"UltralyticsTracker", "export_tracking_artifacts", "TRACKER_OVERRIDE_KEYS"}

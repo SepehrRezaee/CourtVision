@@ -9,10 +9,11 @@ checked against the runtime.
 from __future__ import annotations
 
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from importlib import metadata
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 import numpy as np
 
@@ -285,7 +286,7 @@ class UltralyticsDetector:
             save_dir=str(getattr(metrics, "save_dir", "")) or None,
         )
 
-    def export(self, format: str = "onnx", **kwargs: Any) -> Path:  # noqa: A002 - library parameter name
+    def export(self, format: str = "onnx", **kwargs: Any) -> Path:
         return Path(str(self.model.export(format=format, imgsz=self.imgsz, **kwargs)))
 
 

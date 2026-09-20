@@ -18,11 +18,12 @@ from __future__ import annotations
 
 import tempfile
 from collections import Counter, defaultdict
+from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager, redirect_stdout, suppress
 from dataclasses import dataclass, field
 from io import StringIO
 from pathlib import Path
-from typing import Any, Iterator, Mapping, Sequence
+from typing import Any
 
 import numpy as np
 
@@ -448,7 +449,7 @@ def _try_hota(
             "HOTA NOT MEASURED: the optional 'trackeval' package is not installed. "
             'Install with: pip install -e ".[eval]"'
         )
-    except Exception as exc:  # noqa: BLE001 - a TrackEval failure must not lose the MOT metrics
+    except Exception as exc:
         return None, f"HOTA NOT MEASURED: TrackEval failed with {type(exc).__name__}: {exc}"
 
 

@@ -13,7 +13,9 @@ from .schemas import (
 from .service import AnalysisRequest, AnalysisService, ServiceNotReadyError, ServiceStats
 
 __all__ = [
+    "AnalysisRequest",
     "AnalysisResponse",
+    "AnalysisService",
     "AnalyzeForm",
     "ErrorResponse",
     "HealthResponse",
@@ -21,8 +23,6 @@ __all__ = [
     "JobResult",
     "JobStatus",
     "ReadinessResponse",
-    "AnalysisRequest",
-    "AnalysisService",
     "ServiceNotReadyError",
     "ServiceStats",
 ]

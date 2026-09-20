@@ -72,7 +72,7 @@ class Gate:
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any], *, name: str) -> "Gate":
+    def from_dict(cls, data: Mapping[str, Any], *, name: str) -> Gate:
         if not isinstance(data, Mapping):
             raise GateConfigError(f"Gate {name!r} must be a mapping with 'min' and/or 'max'")
         minimum = data.get("min", data.get("minimum"))
@@ -115,7 +115,7 @@ class GateSet:
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any]) -> "GateSet":
+    def from_dict(cls, data: Mapping[str, Any]) -> GateSet:
         raw_gates = data.get("gates", data.get("quality_gates", {}))
         if isinstance(raw_gates, list):
             # A saved gate set serialises as a list of gate dicts. An empty list is a

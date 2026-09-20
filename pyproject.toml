@@ -4,22 +4,57 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "courtvision"
-version = "0.1.0"
-description = "Production sports-video detection, tracking, evaluation, and serving."
+version = "0.2.0"
+description = "Sports-video detection, multi-object tracking, trajectory and event analytics, evaluation and serving."
+readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
+# Direct dependencies only: everything imported by src/courtvision. Anything heavier is an
+# extra, so a plain `pip install courtvision` stays deployable.
 dependencies = [
   "ultralytics==8.4.156",
   "fastapi>=0.115,<1",
   "uvicorn[standard]>=0.30,<1",
   "python-multipart>=0.0.9",
-  "opencv-python-headless>=4.10",
+  # Imported directly by serving/schemas.py, so declared rather than relied on
+  # transitively through FastAPI.
+  "pydantic>=2.7,<3",
+  # Ultralytics declares opencv-python; asking for the headless build here would install
+  # both providers of the `cv2` module into one environment.
+  "opencv-python>=4.10",
   "numpy>=1.26,<3",
   "PyYAML>=6.0",
+  # motmetrics is used for CLEAR-MOT/identity metrics. Note that its
+  # distances.iou_matrix helper uses np.asfarray, removed in NumPy 2, so CourtVision
+  # builds the IoU distance matrix itself; see evaluation/tracking.py.
   "motmetrics>=1.4",
-  "pandas>=2.2",
 ]
+
 [project.optional-dependencies]
-dev = ["pytest>=8.3", "ruff>=0.8"]
+# Tests and lint. `httpx` backs fastapi.testclient.
+dev = [
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "ruff>=0.8",
+  "httpx>=0.27",
+]
+# TrackEval is the official HOTA reference implementation. It is not on PyPI, so it is
+# pinned to a commit; `courtvision eval tracking --no-hota` works without it.
+eval = [
+  "trackeval @ git+https://github.com/JonathonLuiten/TrackEval.git@12c8791b303e0a0b50f753af204249e622d0281a",
+]
+# ONNX / OpenVINO export and the runtime needed to verify exported outputs.
+export = [
+  "onnx>=1.16",
+  "onnxruntime>=1.19",
+  "openvino>=2024.4",
+]
+# Charts for the Pareto frontier.
+viz = ["matplotlib>=3.8"]
+all = ["courtvision[eval,export,viz]"]
+
+[project.scripts]
+courtvision = "courtvision.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -31,3 +66,17 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+  "E501",   # line length is the formatter's concern
+  "B008",   # FastAPI's File()/Depends() defaults are the documented idiom
+  "RUF001", # ambiguous unicode in docstrings (en dashes are intentional)
+  "RUF002",
+  "RUF003",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["courtvision"]

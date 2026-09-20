@@ -19,8 +19,11 @@ from .drift import (
 from .metrics import REGISTRY, Histogram, MetricsRegistry, percentile_summary
 
 __all__ = [
+    "REGISTRY",
     "SIGNALS",
     "DriftReport",
+    "Histogram",
+    "MetricsRegistry",
     "SignalSummary",
     "compare_distributions",
     "detect_performance_regression",
@@ -28,13 +31,10 @@ __all__ = [
     "jensen_shannon_divergence",
     "kolmogorov_smirnov_statistic",
     "load_reference",
+    "percentile_summary",
     "population_stability_index",
     "reference_from_signals",
     "save_reference",
     "signals_from_tracking_result",
     "summarize_signal",
-    "REGISTRY",
-    "Histogram",
-    "MetricsRegistry",
-    "percentile_summary",
 ]

@@ -187,7 +187,7 @@ def evaluate_detector_on_dataset(
             )
             evaluation.reference = validation.to_dict()
             evaluation.cross_check = cross_check_detection_metrics(by_group["overall"], validation.metrics)
-        except Exception as exc:  # noqa: BLE001 - a failed reference run must not lose our metrics
+        except Exception as exc:
             evaluation.cross_check = {"status": "unavailable", "reason": f"{type(exc).__name__}: {exc}"}
 
     if output_dir is not None:

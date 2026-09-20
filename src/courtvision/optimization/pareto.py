@@ -55,7 +55,7 @@ class ConfigurationRecord:
         }
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any]) -> "ConfigurationRecord":
+    def from_dict(cls, data: Mapping[str, Any]) -> ConfigurationRecord:
         return cls(
             name=str(data["name"]),
             detector=data.get("detector"),

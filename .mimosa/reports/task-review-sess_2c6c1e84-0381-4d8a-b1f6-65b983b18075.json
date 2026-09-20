@@ -1,22 +1,22 @@
 {
   "schema_version": "mimosa-task-review/v2",
-  "run_id": "20260920T211426242Z-21284-b479115fa464",
+  "run_id": "20260920T213904522Z-43748-c91c1adb37ed",
   "run_status": "inconclusive",
   "errors": [
     {
       "stage": "candidate-select",
-      "target": "tests/test_data_validation.py",
+      "target": "src/courtvision/data.py",
       "reason": "changed_file_unreadable: observed changed file no longer exists or cannot be read"
     },
     {
       "stage": "candidate-select",
-      "target": "tests/test_integration_pipeline.py",
+      "target": "src/courtvision/evaluate.py",
       "reason": "changed_file_unreadable: observed changed file no longer exists or cannot be read"
     },
     {
-      "stage": "baseline",
-      "target": ".",
-      "reason": "baseline_partial: baseline capture had enumeration or snapshot errors"
+      "stage": "candidate-select",
+      "target": "src/courtvision/optimization/benchmark.py",
+      "reason": "candidate_limit_exceeded: 19 changed reviewable file(s) were not scanned because the limit is 20"
     }
   ],
   "coverage": {
@@ -24,109 +24,330 @@
     "status": "partial",
     "scope": "hook_observed_diff",
     "baseline": {
-      "complete": false,
-      "captured_files": 2,
+      "complete": true,
+      "captured_files": 53,
       "candidate_limit": 5000,
       "truncated": false,
       "enumeration_error_count": 0,
       "snapshot_error_count": 0,
-      "compensated_target_count": 0
+      "compensated_target_count": 39
     },
     "change_tracking": {
-      "touched_observed": 2,
-      "touched_retained": 2,
+      "touched_observed": 41,
+      "touched_retained": 41,
       "truncated": false,
       "bash_mutation": true,
-      "bash_discovered": 0,
+      "bash_discovered": 39,
       "bash_discovery_limit": 80,
       "bash_discovery_truncated": false
     },
     "candidates": {
-      "eligible_files": 0,
-      "selected_files": 0,
+      "eligible_files": 39,
+      "selected_files": 20,
       "limit": 20,
-      "truncated": false
+      "truncated": true
     },
     "scanning": {
-      "required_files": 0,
-      "scanned_files": 0,
+      "required_files": 20,
+      "scanned_files": 20,
       "skipped_files": 0,
       "failed_files": 0,
       "project_checks_required": 0,
       "project_checks_completed": 0
     },
     "notification": {
-      "eligible_findings": 0,
+      "eligible_findings": 8,
       "detailed_findings": 0,
       "detail_limit": 3,
-      "truncated": false
+      "truncated": true
     },
     "reason_counts": {
       "changed_file_unreadable": 2,
-      "baseline_partial": 1,
+      "candidate_limit_exceeded": 1,
       "project_check_failed": 3
     },
     "reasons": [
       {
         "code": "changed_file_unreadable",
         "stage": "candidate-select",
-        "target": "tests/test_data_validation.py",
+        "target": "src/courtvision/data.py",
         "detail": "observed changed file no longer exists or cannot be read",
         "affects_completion": true
       },
       {
         "code": "changed_file_unreadable",
         "stage": "candidate-select",
-        "target": "tests/test_integration_pipeline.py",
+        "target": "src/courtvision/evaluate.py",
         "detail": "observed changed file no longer exists or cannot be read",
         "affects_completion": true
       },
       {
-        "code": "baseline_partial",
-        "stage": "baseline",
-        "target": ".",
-        "detail": "baseline capture had enumeration or snapshot errors",
+        "code": "candidate_limit_exceeded",
+        "stage": "candidate-select",
+        "target": "src/courtvision/optimization/benchmark.py",
+        "detail": "19 changed reviewable file(s) were not scanned because the limit is 20",
         "affects_completion": true
       },
       {
         "code": "project_check_failed",
         "stage": "candidate-select",
-        "target": "tests/test_data_validation.py",
+        "target": "src/courtvision/data.py",
         "detail": "changed_file_unreadable: observed changed file no longer exists or cannot be read",
         "affects_completion": true
       },
       {
         "code": "project_check_failed",
         "stage": "candidate-select",
-        "target": "tests/test_integration_pipeline.py",
+        "target": "src/courtvision/evaluate.py",
         "detail": "changed_file_unreadable: observed changed file no longer exists or cannot be read",
         "affects_completion": true
       },
       {
         "code": "project_check_failed",
-        "stage": "baseline",
-        "target": ".",
-        "detail": "baseline_partial: baseline capture had enumeration or snapshot errors",
+        "stage": "candidate-select",
+        "target": "src/courtvision/optimization/benchmark.py",
+        "detail": "candidate_limit_exceeded: 19 changed reviewable file(s) were not scanned because the limit is 20",
         "affects_completion": true
       }
     ],
     "reasons_truncated": false
   },
-  "generated_at": "2026-09-20T21:14:26.242Z",
+  "generated_at": "2026-09-20T21:39:04.522Z",
   "session_id": "sess_2c6c1e84-0381-4d8a-b1f6-65b983b18075",
   "target": ".",
-  "revision": "c46999017710d8e5f4d15eb5b5cc8ec08d44c2f1",
+  "revision": "8dfc9dcdc0a5e272c474cca60ccfb288b7c5a97d",
   "rules_version": "unavailable",
-  "diff_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "diff_hash": "7faeb4ab6f8a5493c48672d59f3c48b56a16f875d54a211034f0a34b5730a975",
   "diff": {
     "algorithm": "sha256",
-    "changed_file_count": 0,
-    "changed_files": []
+    "changed_file_count": 20,
+    "changed_files": [
+      {
+        "file": "src/courtvision/config.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 332
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "85120257465b3cf8432debd1c0a3efeb2d157cc3a51d375b24e48225ee5510ce"
+      },
+      {
+        "file": "src/courtvision/data/__init__.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 99
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "10f210a4ed1415f0549650eb692dc6bc2da65d59a049a04712229a3e47ca27bb"
+      },
+      {
+        "file": "src/courtvision/data/conversion.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 259
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "599b0b7d9d29b8ebe2721372878629e414b3cabed86d78fdb635eaae658d5cc0"
+      },
+      {
+        "file": "src/courtvision/data/mot.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 183
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "bacdeb09818ff6a0ae3b4734069ffec3fdc053b5ab9bc29206d5dc7b6161d084"
+      },
+      {
+        "file": "src/courtvision/data/splitting.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 305
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "1c9dcc37162fd3013600abec8590b4d9214bc1ca6fa26faf8dd16c21eb6d3548"
+      },
+      {
+        "file": "src/courtvision/data/sportsmot.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 319
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "dd3c7c59eb5d6455122e91d6a6994af4ac265d31cf17f5ef03097ae24970a45f"
+      },
+      {
+        "file": "src/courtvision/data/synthetic.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 322
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "7e071d87d2a18bce8821a656696389a1545b42fb021980390ad2e50f1de9a8ea"
+      },
+      {
+        "file": "src/courtvision/data/validation.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 667
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "fbf7f776a00e286dc175927cff66e1d916db4a71739a0dff9bd0e819262223ca"
+      },
+      {
+        "file": "src/courtvision/detection/__init__.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 35
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "ce0aa5f4444a935c995483a434dbfba09a01432f22e9d1063b1b3cc6951943e4"
+      },
+      {
+        "file": "src/courtvision/detection/base.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 79
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "f8d84806fa5f972c862db2b0e2d1825c3b413389014a38476509ac68c6825c49"
+      },
+      {
+        "file": "src/courtvision/detection/trainer.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 225
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "d73ac591fe338c22a8f5c7e902739cf16140fa9dfe2169d81e4cb64ec39a2344"
+      },
+      {
+        "file": "src/courtvision/detection/ultralytics_detector.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 310
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "042dded6e37c7dbd58069e3d4af01f080c911b5f7c7b93a5661002b949ece21d"
+      },
+      {
+        "file": "src/courtvision/evaluation/__init__.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 67
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "5e8c500ec130f976135297b36ef32f2aceacfd5a749d97fcba1bf9029addb511"
+      },
+      {
+        "file": "src/courtvision/evaluation/detection.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 630
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "866a3585a3e8088a22ca65be6db8b9d294104c6a99babbc066fc1406c04aa0a2"
+      },
+      {
+        "file": "src/courtvision/evaluation/tracking.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 657
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "db6f8ccccde6fa370d9136c880611ab952409ed5b17007b31bcd353a62e016b5"
+      },
+      {
+        "file": "src/courtvision/repro.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 155
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "ceb730b52e0360f22ce4a758379a14a0c2d25c5717136661b069a5847e2a1c65"
+      },
+      {
+        "file": "src/courtvision/tracking/__init__.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 47
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "c5c38213c68403a7cb50cb87d9a4b8f44008d1ef726265ac5c210ab8dea37fa0"
+      },
+      {
+        "file": "src/courtvision/tracking/base.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 259
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "07afd319883c6251766d4844d394321157e040ddb9f71de015127c49dbd3d7a7"
+      },
+      {
+        "file": "src/courtvision/tracking/ultralytics_tracker.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 319
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "15075947434258d16179d41c5b048a52eb74a1d289507932db87ff1db6a91afd"
+      },
+      {
+        "file": "src/courtvision/utils.py",
+        "ranges": [
+          {
+            "start": 1,
+            "end": 169
+          }
+        ],
+        "before_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "after_hash": "2e27ca0eb19c2b6336bf20f3b6b6196721b53b0937a3182a5b8a17c8674896f5"
+      }
+    ]
   },
   "timing": {
-    "started_at": "2026-09-20T21:14:25.670Z",
-    "completed_at": "2026-09-20T21:14:26.242Z",
-    "duration_ms": 572,
+    "started_at": "2026-09-20T21:39:02.268Z",
+    "completed_at": "2026-09-20T21:39:04.522Z",
+    "duration_ms": 2254,
     "measurement": "hook_wall_clock"
   },
   "tokens": {
@@ -141,10 +362,10 @@
     "profile": "gate",
     "operation": "Stop",
     "outcome": "partial/INCONCLUSIVE",
-    "latencyMs": 572,
-    "peakMemoryBytes": 107204608,
+    "latencyMs": 2254,
+    "peakMemoryBytes": 137117696,
     "memoryMeasurement": "max-observed-process-rss",
-    "scannedFiles": 0,
+    "scannedFiles": 20,
     "cache": {
       "hits": 0,
       "misses": 0,
@@ -159,18 +380,524 @@
       "measurement": "known-zero"
     }
   },
-  "finding_count": 0,
+  "finding_count": 8,
   "rewake_finding_count": 0,
   "evidence_boundary": {
     "scan": "candidate",
     "static_fix_verification": "observed_static_only",
     "runtime_verification": "not_performed"
   },
-  "finding_events": [],
-  "findings": [],
+  "finding_events": [
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "rule_id": "security",
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:17:40.238Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "rule_id": "security",
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:17:40.239Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "rule_id": "security",
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "rule_id": "security",
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "rule_id": "security",
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "rule_id": "security",
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "rule_id": "security",
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "rule_id": "security",
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "advisory",
+      "at": "2026-09-20T21:18:36.501Z",
+      "evidence": {
+        "kind": "source",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "severity": "high",
+      "category": "弱随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "status": "candidate",
+      "decision": "observe",
+      "at": "2026-09-20T21:39:04.522Z",
+      "evidence": {
+        "kind": "static_scan",
+        "boundary": "candidate",
+        "producer": "deterministic",
+        "source": "semgrep",
+        "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+        "runtime_oracle": false
+      }
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "end_line": 234,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/splitting.py",
+          "line": 234,
+          "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-a6d61829d36426e24cf413e6",
+      "file": "src/courtvision/data/splitting.py",
+      "line": 234,
+      "end_line": 234,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "kind": "semgrep",
+      "advisory": false,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/splitting.py",
+          "line": 234,
+          "evidence_hash": "faa33042e4f5a217290b3bbd5f14313c5e797f8d16a67fe0ac62215aa4e58cc7",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "end_line": 195,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 195,
+          "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-be9478576e69362d797b361f",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 195,
+      "end_line": 195,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "kind": "semgrep",
+      "advisory": false,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 195,
+          "evidence_hash": "48c08608206b47b288946f8b98722c72e8b0d27d9eee8d4a57f0cdf281864402",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "end_line": 277,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 277,
+          "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 277,
+      "end_line": 277,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "kind": "semgrep",
+      "advisory": false,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 277,
+          "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "end_line": 309,
+      "severity": "high",
+      "category": "弱随机数",
+      "kind": "semgrep",
+      "advisory": true,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 309,
+          "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    },
+    {
+      "finding_id": "mimosa-dffd20802c858472bde4c81c",
+      "file": "src/courtvision/data/synthetic.py",
+      "line": 309,
+      "end_line": 309,
+      "severity": "low",
+      "category": "不安全的随机数",
+      "kind": "semgrep",
+      "advisory": false,
+      "status": "candidate",
+      "evidence_boundary": "candidate",
+      "evidence": [
+        {
+          "kind": "static_scan",
+          "boundary": "candidate",
+          "producer": "deterministic",
+          "source": "semgrep",
+          "file": "src/courtvision/data/synthetic.py",
+          "line": 309,
+          "evidence_hash": "266d1870b4a29f8828c3631b8add3a145eb9f9235f585475a2fd50b1b352c4d3",
+          "runtime_oracle": false
+        }
+      ],
+      "already_reported_to_agent": false,
+      "selected_for_rewake": false
+    }
+  ],
   "artifacts": {
-    "immutable_report": ".mimosa/reports/task-review-sess_2c6c1e84-0381-4d8a-b1f6-65b983b18075-20260920T211426242Z-21284-b479115fa464.json",
+    "immutable_report": ".mimosa/reports/task-review-sess_2c6c1e84-0381-4d8a-b1f6-65b983b18075-20260920T213904522Z-43748-c91c1adb37ed.json",
     "latest_report": ".mimosa/reports/task-review-sess_2c6c1e84-0381-4d8a-b1f6-65b983b18075.json",
-    "history_summary": ".mimosa/history/run-20260920T211426242Z-21284-b479115fa464.json"
+    "history_summary": ".mimosa/history/run-20260920T213904522Z-43748-c91c1adb37ed.json"
   }
 }

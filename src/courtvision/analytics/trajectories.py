@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from itertools import pairwise
 
 import numpy as np
@@ -252,7 +252,7 @@ class TrackTrajectory:
             raise ValueError("frames, xyxy and confidences must have equal length")
 
     @classmethod
-    def from_detections(cls, track_id: int, detections: Sequence[Detection]) -> "TrackTrajectory":
+    def from_detections(cls, track_id: int, detections: Sequence[Detection]) -> TrackTrajectory:
         ordered = sorted(detections, key=lambda item: item.frame)
         return cls(
             track_id=track_id,
@@ -300,7 +300,7 @@ class TrackTrajectory:
     def mean_confidence(self) -> float:
         return float(self.confidences.mean()) if len(self.confidences) else 0.0
 
-    def fill_gaps(self, *, max_gap: int = 0) -> tuple["TrackTrajectory", np.ndarray]:
+    def fill_gaps(self, *, max_gap: int = 0) -> tuple[TrackTrajectory, np.ndarray]:
         """Linearly interpolate gaps of at most ``max_gap`` frames.
 
         Returns ``(trajectory, interpolated_mask)``. Longer gaps are left alone: linear

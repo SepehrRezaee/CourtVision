@@ -27,12 +27,13 @@ import threading
 import time
 import uuid
 from collections import OrderedDict
+from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Annotated, Any, Iterator
+from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
@@ -147,7 +148,7 @@ class JobStore:
             result = self._runner(job)
             with self._lock:
                 job.result, job.state = result, "succeeded"
-        except Exception as exc:  # noqa: BLE001 - a job failure must not kill the worker
+        except Exception as exc:
             LOGGER.warning("job %s failed: %s", job_id, exc)
             with self._lock:
                 job.state, job.error = "failed", f"{type(exc).__name__}: {exc}"
@@ -419,7 +420,7 @@ def _assert_ready(service: AnalysisService) -> None:
     if not service.model_loaded:
         try:
             service.load()
-        except Exception as exc:  # noqa: BLE001 - surface as 503 with the reason
+        except Exception as exc:
             raise HTTPException(status_code=503, detail=f"Model unavailable: {exc}") from exc
 
 
