@@ -1,14 +1,97 @@
-model: yolo26x.pt
-imgsz: 1280
-epochs: 100
-batch: -1
-device: 0
-workers: 8
-seed: 42
-patience: 20
-optimizer: auto
-cos_lr: true
-close_mosaic: 10
-tracker: tracktrack.yaml
-conf: 0.25
-iou: 0.7
+# CourtVision base configuration.
+#
+# Every section and key is validated at load time: an unknown key is an error rather
+# than a silently ignored typo. Precedence, lowest to highest:
+#   dataclass defaults -> this file -> COURTVISION_<SECTION>_<KEY> env -> CLI overrides
+#
+# Model and tracker identifiers are checked against the *installed* Ultralytics by
+# `courtvision doctor`; do not assume a checkpoint exists because it is named here.
+
+paths:
+  raw_data_root: data/SportsMOT
+  data_root: data/sportsmot_yolo
+  reports_dir: reports
+  runs_dir: runs
+
+split:
+  seed: 42
+  val_ratio: 0.2
+  test_ratio: 0.2
+  stratify_by_sport: true
+
+detector:
+  model: yolo26n.pt
+  imgsz: 640
+  conf: 0.25
+  iou: 0.7
+  max_det: 300
+  device: cpu
+  half: false
+
+train:
+  data: data/sportsmot_yolo/dataset.yaml
+  model: yolo26n.pt
+  epochs: 100
+  imgsz: 640
+  batch: -1
+  device: 0
+  workers: 8
+  seed: 42
+  patience: 20
+  optimizer: auto
+  cos_lr: true
+  close_mosaic: 10
+  name: courtvision
+
+tracker:
+  name: bytetrack.yaml
+  conf: 0.25
+  iou: 0.7
+  max_det: 300
+
+events:
+  zone_grid: [3, 3]
+  sprint_speed: 12.0
+  sprint_min_frames: 5
+  stationary_speed: 1.0
+  stationary_min_frames: 25
+  accel_threshold: 2.0
+  decel_threshold: -2.0
+  direction_change_deg: 90.0
+  direction_change_min_speed: 2.0
+  close_proximity_distance: 80.0
+  proximity_min_frames: 3
+  convergence_window: 5
+  convergence_delta: 20.0
+  min_track_length: 5
+  smoothing_window: 5
+
+benchmark:
+  warmup_frames: 10
+  max_frames: 200
+  repeats: 1
+  percentiles: [50.0, 95.0]
+
+api:
+  max_upload_mb: 200.0
+  allowed_extensions: [".mp4", ".avi", ".mov", ".mkv", ".webm"]
+  max_frames: 3000
+  max_event_list: 500
+  job_ttl_seconds: 3600
+  max_jobs: 32
+  job_max_workers: 1
+
+monitoring:
+  reference_path: reports/monitoring/reference.json
+  bins: 20
+  psi_warn: 0.1
+  psi_alert: 0.25
+
+serving:
+  model: yolo26n.pt
+  device: cpu
+  tracker: bytetrack.yaml
+  imgsz: 640
+  conf: 0.25
+  preload: true
+  enable_metrics: true

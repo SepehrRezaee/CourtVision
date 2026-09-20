@@ -10,3 +10,4 @@ weights/
 *.onnx
 *.engine
 .DS_Store
+.mimosa/
