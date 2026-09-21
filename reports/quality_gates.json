@@ -1,32 +1,31 @@
 {
   "status": "PASS",
   "passed": true,
-  "generated_at": "2026-09-21T11:43:39+00:00",
+  "generated_at": "2026-09-21T12:27:50+00:00",
   "measurements_file": "reports\\latest\\report.json",
   "gate_set": {
-    "name": "measured-baseline",
+    "name": "runtime-baseline",
     "kind": "baseline",
     "source": "configs\\quality_gates.yaml",
-    "generated_at": "2026-09-21T11:43:39+00:00",
+    "generated_at": null,
     "notes": [
-      "Thresholds derived from a measured run of this repository.",
-      "Relative tolerance applied: 0.0500.",
-      "Metrics requested but absent from the measurements (not gated): ['artifacts.tracking_metrics.aggregate.idf1', 'artifacts.tracking_metrics.aggregate.mota', 'artifacts.tracking_metrics.aggregate.num_switches']"
+      "Thresholds derived from the measured CPU run in reports/benchmarks (real street scene, warm-up excluded); 5% relative tolerance for run-to-run variation.",
+      "Reference configuration: yolo26n_bytetrack_480."
     ],
     "is_quality_claim": true,
     "gates": [
       {
-        "metric": "artifacts.detection_metrics.groups.overall.map50_95",
-        "min": 0.00710695,
-        "max": null,
-        "description": "baseline (higher is better)",
+        "metric": "artifacts.benchmarks.runs.0.summary.rows.0.end_to_end_ms_p95",
+        "min": null,
+        "max": 71.15598,
+        "description": "Tail latency of the reference configuration; higher is a regression",
         "required": true
       },
       {
-        "metric": "artifacts.detection_metrics.groups.overall.map50",
-        "min": 0.0268071,
+        "metric": "artifacts.benchmarks.runs.0.summary.rows.0.fps_from_mean",
+        "min": 18.003735,
         "max": null,
-        "description": "baseline (higher is better)",
+        "description": "Throughput of the reference configuration; lower is a regression",
         "required": true
       }
     ]
@@ -37,28 +36,28 @@
   "failures": [],
   "outcomes": [
     {
-      "metric": "artifacts.detection_metrics.groups.overall.map50_95",
+      "metric": "artifacts.benchmarks.runs.0.summary.rows.0.end_to_end_ms_p95",
       "passed": true,
-      "message": "artifacts.detection_metrics.groups.overall.map50_95=0.007481 ok",
-      "value": 0.007481,
+      "message": "artifacts.benchmarks.runs.0.summary.rows.0.end_to_end_ms_p95=67.7676 ok",
+      "value": 67.7676,
       "gate": {
-        "metric": "artifacts.detection_metrics.groups.overall.map50_95",
-        "min": 0.00710695,
-        "max": null,
-        "description": "baseline (higher is better)",
+        "metric": "artifacts.benchmarks.runs.0.summary.rows.0.end_to_end_ms_p95",
+        "min": null,
+        "max": 71.15598,
+        "description": "Tail latency of the reference configuration; higher is a regression",
         "required": true
       }
     },
     {
-      "metric": "artifacts.detection_metrics.groups.overall.map50",
+      "metric": "artifacts.benchmarks.runs.0.summary.rows.0.fps_from_mean",
       "passed": true,
-      "message": "artifacts.detection_metrics.groups.overall.map50=0.028218 ok",
-      "value": 0.028218,
+      "message": "artifacts.benchmarks.runs.0.summary.rows.0.fps_from_mean=18.9513 ok",
+      "value": 18.9513,
       "gate": {
-        "metric": "artifacts.detection_metrics.groups.overall.map50",
-        "min": 0.0268071,
+        "metric": "artifacts.benchmarks.runs.0.summary.rows.0.fps_from_mean",
+        "min": 18.003735,
         "max": null,
-        "description": "baseline (higher is better)",
+        "description": "Throughput of the reference configuration; lower is a regression",
         "required": true
       }
     }

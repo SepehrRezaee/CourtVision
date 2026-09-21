@@ -8,11 +8,11 @@ pip install -e ".[dev]"          # runtime plus tests/lint
 pip install -e ".[eval]"         # adds TrackEval, for HOTA
 
 courtvision doctor                                    # what this environment can actually do
-courtvision data synth --output data/synth            # synthetic dataset (no licensed download)
-courtvision data prepare --source data/synth --output data/prepared
-courtvision eval detector --weights yolo26n.pt --data data/prepared --output reports/detection
-courtvision data video --output data/clips            # synthetic clip plus matching MOT ground truth
-courtvision benchmark --video data/clips/synthetic_track.mp4 \
+courtvision data validate --source /data/SportsMOT    # integrity report on the raw tree
+courtvision data prepare --source /data/SportsMOT --output data/sportsmot_yolo
+courtvision eval detector --weights runs/detect/courtvision/weights/best.pt \
+    --data data/sportsmot_yolo --output reports/detection
+courtvision benchmark --video match.mp4 \
     --weights yolo26n.pt,yolo26s.pt --trackers bytetrack.yaml,botsort.yaml --imgsz 480,640
 courtvision report                                    # aggregate every artefact on disk
 courtvision gate --write-baseline                     # write gates from *measured* values
@@ -26,22 +26,21 @@ reported number can be traced to the commit, dependencies and hardware behind it
 
 | Area | Status |
 | --- | --- |
-| Dataset validation (integrity report, per-code severities, aggregate counts) | implemented, verified |
-| Leak-safe sequence-level split: seeded, stratified, content-addressed | implemented, verified |
-| MOT → YOLO conversion with an explicit, recorded filter policy | implemented, verified |
-| Detection evaluation: COCO mAP, confidence sweeps, PR curves, per-group | implemented, cross-checked |
-| MOT evaluation: motmetrics CLEAR/ID plus TrackEval HOTA | implemented, validated on known answers |
+| Dataset validation (integrity report, per-code severities, aggregate counts) | implemented, tested |
+| Leak-safe sequence-level split: seeded, stratified, content-addressed | implemented, tested |
+| MOT → YOLO conversion with an explicit, recorded filter policy | implemented, tested |
+| Detection evaluation: COCO mAP, confidence sweeps, PR curves, per-group | implemented, tested |
+| MOT evaluation: motmetrics CLEAR/ID plus TrackEval HOTA | implemented, tested |
 | Tracker backends (all 6 trackers shipped by Ultralytics) | implemented, run |
-| Trajectory and kinematic analytics, frame-relative zones | implemented |
-| Deterministic event detection, 12 event types | implemented |
+| Trajectory and kinematic analytics, frame-relative zones | implemented, tested |
+| Deterministic event detection, 12 event types | implemented, tested |
 | Layered latency/throughput benchmarking | implemented, measured |
-| FastAPI service: upload validation, bounded frames, in-process jobs | implemented |
-| Runtime metrics plus input-drift comparison (PSI/KS/JS) | implemented |
-| Machine-readable quality gates (example vs measured baseline) | implemented, exercised |
-| Model export and export *validation* (ONNX/OpenVINO) | **not executed here** |
-| Pose estimation | **not implemented** |
-| Airflow DAG, MLflow experiment tracking | **not implemented** |
-| Test suite for the new modules | **not written** |
+| FastAPI service: upload validation, bounded frames, in-process jobs | implemented, tested |
+| Runtime metrics plus input-drift comparison (PSI/KS/JS) | implemented, tested |
+| Machine-readable quality gates (example vs measured baseline) | implemented, tested |
+| Model export and export *validation* (ONNX/OpenVINO) | implemented; ONNX measured, fails the strict equivalence gate |
+| Pose estimation | not implemented |
+| Airflow DAG, MLflow experiment tracking | not implemented |
 
 ## Capability claims are queried, not hardcoded
 
@@ -97,43 +96,43 @@ Everything below was produced by a command in this repository on this machine:
 | yolo26s | botsort | 640 | 82.45 | 83.59 | 95.74 | 12.13 |
 | yolo26s | bytetrack | 640 | 89.60 | 89.47 | **107.15** | 11.16 |
 
+### Runtime, CPU — 120 measured frames after 5 warm-up frames, warm-up excluded
+
+Measured over a real street scene (`yolo26n.pt`, 25 fps source, per-frame detections from
+the model itself), 2 repeats with fresh tracker state per repeat:
+
+| Detector | Tracker | imgsz | mean ms | p50 ms | p95 ms | FPS |
+| --- | --- | --: | --: | --: | --: | --: |
+| yolo26n | bytetrack | 480 | **52.77** | 54.02 | **67.77** | **18.95** |
+| yolo26n | bytetrack | 640 | 57.03 | 55.00 | 79.69 | 17.54 |
+| yolo26n | botsort | 480 | 63.37 | 61.42 | 81.90 | 15.78 |
+| yolo26n | botsort | 640 | 65.11 | 63.63 | 83.98 | 15.36 |
+| yolo26s | bytetrack | 480 | 80.27 | 77.12 | 106.97 | 12.46 |
+| yolo26s | botsort | 480 | 87.82 | 86.71 | 103.10 | 11.39 |
+| yolo26s | bytetrack | 640 | 120.44 | 116.72 | 157.84 | 8.30 |
+| yolo26s | botsort | 640 | 126.92 | 127.15 | 149.90 | 7.88 |
+
 Artefacts: `reports/benchmarks/*_raw.csv` (one row per measured frame), `_summary.json`,
-`system.json`. Reading: on this CPU **yolo26n + botsort @480** is the throughput
-configuration (38.4 ms p95, 31.6 FPS); moving to yolo26s @640 costs about 2.8× the p95.
-That is a measured trade-off. No GPU row exists because no CUDA device was available.
+`system.json`. Reading: on this CPU **yolo26n + bytetrack @480** is the throughput
+configuration (67.8 ms p95, 19.0 FPS); moving to yolo26s @640 costs ~2.3× the p95. That is
+a measured trade-off. No GPU row exists because no CUDA device was available.
 
-### Detection — synthetic validation split, explicitly NOT model quality
+### Model export — ONNX vs the reference, on the same frames
 
-72 images, 284 ground-truth boxes, 323 predictions, `yolo26n.pt` @640 on CPU:
+`yolo26n.onnx` ran against the PyTorch reference over the same 12 frames of the street
+clip (61 detections each): match fraction **0.885** against the 0.95 gate, mean IoU of
+matches 0.976, one box off by 27 px — so the strict behavioural gate **fails**, and the
+artefact is not treated as drop-in equivalent. CPU timing at imgsz 640 showed no speedup
+(PyTorch 58.6 ms vs ONNX 62.1 ms per frame). Full numbers:
+`reports/optimization/export.json`.
 
-| Group | Images | mAP50 | mAP50-95 | Precision | Recall |
-| --- | --: | --: | --: | --: | --: |
-| basketball | 24 | 0.0876 | 0.0223 | 0.5882 | 0.1075 |
-| football | 24 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
-| volleyball | 24 | 0.0000 | 0.0000 | 0.0000 | 0.0000 |
-| overall | 72 | 0.0282 | 0.0075 | 0.3571 | 0.0352 |
+### Configuration trade-off (Pareto)
 
-**These are not model-quality numbers.** The labels come from the synthetic generator and the
-imagery is coloured rectangles, so a COCO detector has almost nothing to find. They show the
-evaluation path runs end to end and serialises metrics.
-
-The informative part of that run is the cross-check: our mAP50 **0.0282** against
-Ultralytics' `val()` **0.0177** — reported as `disagree` at a 0.01 tolerance. That comparison
-runs two *end-to-end* pipelines (ours scores our own `predict()` output; the reference
-re-runs inference inside `val()` with its own batching and rect settings), so a small delta
-is expected and is **not** evidence that either evaluator is wrong. A clean evaluator
-comparison requires one shared prediction set scored by both, which is not implemented.
-
-### MOT metric correctness on analytically known cases
-
-| Case | MOTA | IDF1 | HOTA | AssA |
-| --- | --: | --: | --: | --: |
-| ground truth scored against itself | 1.000 | 1.000 | 1.000 | 1.000 |
-| identity permutation of the predictions | -0.300 | 0.350 | 0.194 | 0.186 |
-
-Threshold semantics are pinned as well: a box at IoU 0.7 scores AP 1.0 at threshold 0.5 and
-0.0 at 0.75, and MOTA is 1.0 at threshold 0.5 and -1.0 at 0.9. HOTA comes from TrackEval's
-own implementation.
+With latency on both axes there is no accuracy dimension to trade against; the frontier in
+`reports/pareto.json` ranks mean throughput against tail latency across the eight
+configurations above. `yolo26n_bytetrack_480` dominates — it is simultaneously the fastest
+and the most consistent — so the report states that the quality, throughput and balanced
+recommendations all coincide.
 
 ### The two original defects, both fixed and reproduced
 

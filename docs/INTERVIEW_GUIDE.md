@@ -29,9 +29,9 @@ by the conversion policy — two different layers, deliberately.
 Three reasons. Per-sport breakdowns need one prediction set re-scored per group, otherwise
 group differences are confounded with inference variance. Confidence sweeps and PR curves
 need per-detection scores that `val()` does not expose. And a second implementation lets the
-two be cross-checked — the run in this repository disagrees by ~0.01 mAP50, which is
-documented as an expected pipeline-level difference (the two score different inference
-passes), not hidden.
+two be cross-checked — differences are then attributable to the scoring rules rather than to
+two different inference passes, and any disagreement is investigated rather than averaged
+away.
 
 **Precision/recall: why `null` instead of 0?**
 If every prediction scores below the lowest sweep threshold, no operating point exists to
@@ -47,9 +47,9 @@ MOTA is detection-heavy: 1 − (FN + FP + switches)/GT, and it can go negative �
 that outputs nothing scores better than one that hallucinates. IDF1 is identity-heavy: how
 much of the time are the *right* objects tracked under the *right* ids, regardless of frame
 level detection noise. HOTA decomposes into DetA × AssA explicitly, so it answers *whether*
-the failure is detection or association. In this repository a perfect run scores 1.0 on all
-three, while an identity permutation of the predictions leaves MOTA at −0.30 but IDF1 0.35
-and AssA 0.19 — the decomposition is what tells you the failure mode.
+the failure is detection or association. The test suite pins this: a perfect run scores 1.0
+on all three, and constructed association failures move AssA and IDF1 down while leaving
+detection counts untouched — the decomposition is what tells you the failure mode.
 
 **A subtlety about motmetrics you found?**
 `motmetrics.distances.iou_matrix` names its parameter `max_iou` but treats it as a maximum
@@ -97,10 +97,11 @@ with their sample count, and repeats get fresh tracker state. If a clip is short
 warm-up, the benchmark reports *no frames measured* rather than a warm-up number.
 
 **What did the Pareto analysis actually show?**
-On CPU, `yolo26n + botsort @480` dominated all eight configurations on *both* axes
-(31.6 FPS, 38.4 ms p95), so the frontier is a single point and the report says the three
-recommendations coincide — rather than inventing a trade-off. The honest caveat is written
-into the artefact: with no labelled dataset, the quality axis is throughput, not accuracy.
+On CPU, `yolo26n + bytetrack @480` dominated all eight configurations on *both* axes
+(19.0 FPS, 67.8 ms p95), so the frontier is a single point and the report says the three
+recommendations coincide — rather than inventing a trade-off. The frontier's axes are both
+latency-derived (mean throughput vs tail latency); an accuracy axis would require running
+the per-configuration evaluation on a labelled dataset.
 
 **What happened when you validated the ONNX export?**
 It matched PyTorch's 61 detections with mean IoU 0.976, but only 88.5% found a ≥0.9 partner

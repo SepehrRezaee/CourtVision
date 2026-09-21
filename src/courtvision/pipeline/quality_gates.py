@@ -147,12 +147,19 @@ def load_gate_set(path: str | Path) -> GateSet:
 
 
 def flatten_measurements(measurements: Mapping[str, Any], prefix: str = "") -> dict[str, float]:
-    """Flatten a nested report into ``dotted.key -> float`` lookups."""
+    """Flatten a nested report into ``dotted.key -> float`` lookups.
+
+    Lists are flattened with numeric indices (``runs.0.summary...``), so a gate can
+    address a specific benchmark run inside the aggregate report.
+    """
     flat: dict[str, float] = {}
     for key, value in measurements.items():
         name = f"{prefix}{key}"
         if isinstance(value, Mapping):
             flat.update(flatten_measurements(value, prefix=f"{name}."))
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                flat.update(flatten_measurements({str(index): item}, prefix=f"{name}."))
         elif isinstance(value, bool) or value is None:
             continue
         elif isinstance(value, (int, float)):

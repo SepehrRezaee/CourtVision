@@ -85,10 +85,9 @@ two 45° changes.
 
 Events are deterministic thresholds: appearance, disappearance, zone enter/exit, direction
 change, acceleration, deceleration, sprint, stationary, close proximity, convergence,
-divergence. Every event carries its measured value, threshold and unit.
-
-**Event accuracy is NOT MEASURED.** No labelled temporal sports-event dataset exists here;
-what is established is determinism and unit-test coverage, never accuracy.
+divergence. Every event carries its measured value, threshold and unit. The rules are covered
+by unit tests on constructed trajectories; accuracy against human-labelled events is a
+separate activity requiring a labelled dataset.
 
 ## Drift
 
