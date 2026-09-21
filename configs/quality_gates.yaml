@@ -1,7 +1,7 @@
 name: measured-baseline
 kind: baseline
 source: null
-generated_at: '2026-09-20T21:37:10+00:00'
+generated_at: '2026-09-21T11:43:39+00:00'
 notes:
 - Thresholds derived from a measured run of this repository.
 - 'Relative tolerance applied: 0.0500.'

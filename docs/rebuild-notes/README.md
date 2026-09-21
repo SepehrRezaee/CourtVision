@@ -141,18 +141,14 @@ So the repository's central capability claims were supported by the runtime. The
 gap was in correctness, evaluation rigour and production hardening — not in the
 tracker or model names.
 
-## Design documents for the lost work
+## Status of the rebuild
 
-* `ARCHITECTURE.md` — module layout, the data path, why each component exists, CPU
-  and GPU deployment shapes, concurrency model, configuration precedence.
-* `EVALUATION.md` — every metric definition, matching rules, the two NumPy 2 /
-  TrackEval compatibility issues, pixel-space policy, drift semantics, gate kinds.
-* `PERFORMANCE.md` — benchmark methodology (warm-up exclusion, stage separation, raw
-  data retention, percentile sample counts, Pareto rules).
-
-They describe the implementation that was built and tested during this session and
-then destroyed. The measured results they would have carried were never produced, so
-they contain no numbers.
+The implementation described below was subsequently rebuilt. The design documents now live
+in the parent directory — `../ARCHITECTURE.md`, `../EVALUATION.md` and
+`../PERFORMANCE.md` — rewritten against the code that is actually present, alongside
+`../LIMITATIONS.md` and `../INTERVIEW_GUIDE.md`. This file remains as the record of the
+audit findings, the two confirmed defects and their reproductions, and the retracted
+hypotheses.
 
 ## How to resume
 

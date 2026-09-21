@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-09-21T11:38:56+00:00",
+  "kind": "input-drift",
+  "is_proxy_signal": true,
+  "interpretation": "Drift signals describe changes in the input distribution. They are PROXY signals and do not by themselves demonstrate model degradation; a labelled metric is required for that.",
+  "signals": {
+    "box_area_px": {
+      "reference_count": 86,
+      "current_count": 122,
+      "current_mean": 122538.473729,
+      "current_std": 144224.108666,
+      "psi": 14.285607,
+      "ks": 1.0,
+      "js": 0.943378,
+      "verdict": "alert",
+      "reference_mean": 754.857366,
+      "mean_shift": 121783.616363
+    },
+    "box_aspect_ratio": {
+      "reference_count": 86,
+      "current_count": 122,
+      "current_mean": 0.5191,
+      "current_std": 0.504714,
+      "psi": 11.911836,
+      "ks": 0.803279,
+      "js": 0.846622,
+      "verdict": "alert",
+      "reference_mean": 1.03922,
+      "mean_shift": -0.52012
+    },
+    "confidence": {
+      "reference_count": 86,
+      "current_count": 122,
+      "current_mean": 0.743711,
+      "current_std": 0.196103,
+      "psi": 5.924372,
+      "ks": 0.78822,
+      "js": 0.764817,
+      "verdict": "alert",
+      "reference_mean": 0.388721,
+      "mean_shift": 0.35499
+    },
+    "detections_per_frame": {
+      "reference_count": 60,
+      "current_count": 24,
+      "current_mean": 5.083333,
+      "current_std": 0.640095,
+      "psi": 16.285384,
+      "ks": 0.983333,
+      "js": 0.968841,
+      "verdict": "alert",
+      "reference_mean": 1.433333,
+      "mean_shift": 3.65
+    },
+    "frame_height": {
+      "reference_count": 1,
+      "current_count": 1,
+      "current_mean": 1080.0,
+      "current_std": 0.0,
+      "psi": 27.630993,
+      "ks": 1.0,
+      "js": 1.0,
+      "verdict": "alert",
+      "reference_mean": 360.0,
+      "mean_shift": 720.0
+    },
+    "frame_width": {
+      "reference_count": 1,
+      "current_count": 1,
+      "current_mean": 810.0,
+      "current_std": 0.0,
+      "psi": 27.630993,
+      "ks": 1.0,
+      "js": 1.0,
+      "verdict": "alert",
+      "reference_mean": 640.0,
+      "mean_shift": 170.0
+    },
+    "inference_latency_ms": {
+      "reference_count": 60,
+      "current_count": 24,
+      "current_mean": 57.397446,
+      "current_std": 11.884878,
+      "psi": 1.480385,
+      "ks": 0.275,
+      "js": 0.368749,
+      "verdict": "alert",
+      "reference_mean": 54.053243,
+      "mean_shift": 3.344203
+    },
+    "track_duration_frames": {
+      "reference_count": 5,
+      "current_count": 6,
+      "current_mean": 20.333333,
+      "current_std": 5.467073,
+      "psi": 16.275779,
+      "ks": 0.466667,
+      "js": 0.797196,
+      "verdict": "alert",
+      "reference_mean": 16.8,
+      "mean_shift": 3.533333
+    },
+    "track_fragmentation": {
+      "reference_count": 5,
+      "current_count": 6,
+      "current_mean": 0.333333,
+      "current_std": 0.745356,
+      "psi": 8.510795,
+      "ks": 0.833333,
+      "js": 0.671959,
+      "verdict": "alert",
+      "reference_mean": 3.2,
+      "mean_shift": -2.866667
+    },
+    "track_length": {
+      "reference_count": 1,
+      "current_count": 1,
+      "current_mean": 6.0,
+      "current_std": 0.0,
+      "psi": 27.630993,
+      "ks": 1.0,
+      "js": 1.0,
+      "verdict": "alert",
+      "reference_mean": 5.0,
+      "mean_shift": 1.0
+    }
+  },
+  "max_psi": 27.630993,
+  "alerts": [
+    {
+      "signal": "box_area_px",
+      "psi": 14.285607,
+      "message": "box_area_px shifted substantially (PSI 14.286 >= 0.25)"
+    },
+    {
+      "signal": "box_aspect_ratio",
+      "psi": 11.911836,
+      "message": "box_aspect_ratio shifted substantially (PSI 11.912 >= 0.25)"
+    },
+    {
+      "signal": "confidence",
+      "psi": 5.924372,
+      "message": "confidence shifted substantially (PSI 5.924 >= 0.25)"
+    },
+    {
+      "signal": "detections_per_frame",
+      "psi": 16.285384,
+      "message": "detections_per_frame shifted substantially (PSI 16.285 >= 0.25)"
+    },
+    {
+      "signal": "frame_height",
+      "psi": 27.630993,
+      "message": "frame_height shifted substantially (PSI 27.631 >= 0.25)"
+    },
+    {
+      "signal": "frame_width",
+      "psi": 27.630993,
+      "message": "frame_width shifted substantially (PSI 27.631 >= 0.25)"
+    },
+    {
+      "signal": "inference_latency_ms",
+      "psi": 1.480385,
+      "message": "inference_latency_ms shifted substantially (PSI 1.480 >= 0.25)"
+    },
+    {
+      "signal": "track_duration_frames",
+      "psi": 16.275779,
+      "message": "track_duration_frames shifted substantially (PSI 16.276 >= 0.25)"
+    },
+    {
+      "signal": "track_fragmentation",
+      "psi": 8.510795,
+      "message": "track_fragmentation shifted substantially (PSI 8.511 >= 0.25)"
+    },
+    {
+      "signal": "track_length",
+      "psi": 27.630993,
+      "message": "track_length shifted substantially (PSI 27.631 >= 0.25)"
+    }
+  ],
+  "warnings": []
+}

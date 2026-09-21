@@ -120,6 +120,28 @@ def test_out_of_range_mass_lands_in_the_edge_bins() -> None:
     assert far_away.signals["x"]["verdict"] == "alert", "total distribution replacement must alert"
 
 
+def test_ks_is_computed_when_the_reference_keeps_a_sample() -> None:
+    """Regression: the KS column was reported as nan because references stored no samples."""
+    reference = reference_from_signals({"x": list(range(100))}, bins=10)
+    assert reference["signals"]["x"]["sample"], "the reference must retain a bounded raw sample"
+    report = compare_distributions(reference, {"x": list(range(100))})
+    assert report.signals["x"]["ks"] is not None
+    assert report.signals["x"]["ks"] == pytest.approx(0.0, abs=1e-9)
+
+    shifted = compare_distributions(reference, {"x": list(range(100, 200))})
+    assert shifted.signals["x"]["ks"] == pytest.approx(1.0)
+
+
+def test_ks_is_none_for_a_legacy_reference_without_a_sample() -> None:
+    """A reference entry without samples reports KS as None, never approximated from bins."""
+    legacy = {"signals": {"x": {
+        "count": 5, "mean": 2.0, "std": 1.0, "min": 0.0, "max": 4.0,
+        "quantiles": {}, "histogram": {"counts": [1] * 5, "edges": [float(i) for i in range(6)]},
+    }}}
+    report = compare_distributions(legacy, {"x": [1.0, 2.0, 3.0]})
+    assert report.signals["x"]["ks"] is None
+
+
 def test_drift_is_labelled_a_proxy_signal() -> None:
     reference = reference_from_signals({"x": list(range(100))}, bins=10)
     report = compare_distributions(reference, {"x": list(range(100))})

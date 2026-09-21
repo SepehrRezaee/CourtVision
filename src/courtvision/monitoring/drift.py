@@ -44,6 +44,11 @@ SIGNALS: dict[str, str] = {
 DEFAULT_QUANTILES = (10, 25, 50, 75, 90)
 DEFAULT_BINS = 21
 
+#: Raw observations retained per signal in a reference document, so a later batch can be
+#: compared with the two-sample KS statistic. 10k floats per signal keeps the reference
+#: file small while making the KS statistic stable.
+MAX_REFERENCE_SAMPLE = 10_000
+
 
 @dataclass
 class SignalSummary:
@@ -55,6 +60,9 @@ class SignalSummary:
     maximum: float
     quantiles: dict[str, float]
     histogram: dict[str, Any]
+    #: Bounded raw observations, retained so a later batch can be compared with the
+    #: two-sample KS statistic (which needs observations, not binned counts).
+    sample: list[float] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -66,6 +74,7 @@ class SignalSummary:
             "max": round(self.maximum, 6),
             "quantiles": {key: round(value, 6) for key, value in self.quantiles.items()},
             "histogram": self.histogram,
+            "sample": [round(value, 6) for value in self.sample],
         }
 
     @classmethod
@@ -83,14 +92,25 @@ class SignalSummary:
 
 
 def summarize_signal(
-    name: str, values: Sequence[float] | np.ndarray, *, bins: int = DEFAULT_BINS, quantiles: Sequence[int] = DEFAULT_QUANTILES
+    name: str,
+    values: Sequence[float] | np.ndarray,
+    *,
+    bins: int = DEFAULT_BINS,
+    quantiles: Sequence[int] = DEFAULT_QUANTILES,
+    keep_sample: int = MAX_REFERENCE_SAMPLE,
 ) -> SignalSummary:
-    """Summarise into moments, quantiles and a histogram **that retains its edges**."""
+    """Summarise into moments, quantiles and a histogram **that retains its edges**.
+
+    A bounded raw sample is retained alongside the histogram so a later batch can be
+    compared with the two-sample KS statistic, which needs actual observations rather
+    than binned counts.
+    """
     array = np.asarray(list(values), dtype=float).reshape(-1)
     array = array[np.isfinite(array)]
     if array.size == 0:
         raise ValueError(f"Signal {name!r} has no finite values to summarise")
     counts, edges = np.histogram(array, bins=bins)
+    sample = array if keep_sample <= 0 or array.size <= keep_sample else array[:keep_sample]
     return SignalSummary(
         name=name,
         count=int(array.size),
@@ -100,6 +120,7 @@ def summarize_signal(
         maximum=float(array.max()),
         quantiles={f"p{value}": float(np.percentile(array, value)) for value in quantiles},
         histogram={"counts": [int(count) for count in counts], "edges": [float(edge) for edge in edges]},
+        sample=[float(value) for value in sample],
     )
 
 
@@ -264,10 +285,20 @@ def compare_distributions(
         reference_counts = np.asarray(reference_entry["histogram"]["counts"], dtype=float)
         current_counts = histogram_counts_with_edges(array, reference_entry["histogram"]["edges"])
         psi = population_stability_index(reference_counts, current_counts)
+        # KS needs raw observations on both sides; references built before the sample
+        # retention field existed have none, and the statistic stays None rather than
+        # being approximated from bins.
+        reference_sample = reference_entry.get("sample") or []
+        ks = (
+            round(kolmogorov_smirnov_statistic(reference_sample, array), 6)
+            if reference_sample
+            else None
+        )
         entry.update(
             {
                 "reference_count": int(reference_entry["count"]),
                 "psi": round(psi, 6),
+                "ks": ks,
                 "js": round(jensen_shannon_divergence(reference_counts, current_counts), 6),
                 "reference_mean": round(float(reference_entry["mean"]), 6),
                 "mean_shift": round(float(array.mean()) - float(reference_entry["mean"]), 6),

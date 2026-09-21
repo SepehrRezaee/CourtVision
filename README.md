@@ -74,8 +74,8 @@ src/courtvision/
   reports/             builder.py (assembles REPORT.md from artefacts on disk)
 configs/               base.yaml, accuracy/throughput/cpu profiles, quality_gates.yaml
 reports/               measurement evidence from real runs
-tests/                 the repository's original tests
-docs/rebuild-notes/    audit findings and design rationale
+docs/                  ARCHITECTURE.md EVALUATION.md PERFORMANCE.md LIMITATIONS.md INTERVIEW_GUIDE.md
+tests/                 pytest suite (data, evaluation, analytics, monitoring, serving, pipeline)
 ```
 
 ## Measured results

@@ -1,0 +1,58 @@
+{
+  "validation": {
+    "reference": "yolo26n.pt",
+    "exported": "reports/optimization/yolo26n.onnx",
+    "frames": 12,
+    "reference_detections": 61,
+    "exported_detections": 61,
+    "matched": 54,
+    "match_fraction": 0.885246,
+    "mean_iou_matched": 0.975886,
+    "max_coordinate_deviation_px": 27.2726,
+    "tolerances": {
+      "min_match_iou": 0.9,
+      "min_match_fraction": 0.95,
+      "max_coordinate_deviation_px": 2.0,
+      "conf": 0.25,
+      "imgsz": 640
+    },
+    "passed": false,
+    "notes": []
+  },
+  "frames_info": {
+    "source": "data\\clips\\street.mp4",
+    "frames": 12,
+    "decode_seconds": 0.039227,
+    "decode_ms_per_frame": 3.2689,
+    "declared_fps": 10.0,
+    "frame_size": [
+      810,
+      1080
+    ]
+  },
+  "benchmark": {
+    "reference": {
+      "per_frame_ms_repeats": [
+        56.1246,
+        58.3326,
+        61.4741
+      ],
+      "mean_ms": 58.6438,
+      "std_ms": 2.195,
+      "fps": 17.0521
+    },
+    "exported": {
+      "per_frame_ms_repeats": [
+        59.6979,
+        64.1074,
+        62.527
+      ],
+      "mean_ms": 62.1108,
+      "std_ms": 1.8241,
+      "fps": 16.1003
+    },
+    "speedup_exported_vs_reference": 0.9442,
+    "device": "cpu",
+    "note": "Speedup is reference_ms / exported_ms on identical frames, image size and device, with warm-up excluded. It is a measured ratio for this hardware, not a portable claim."
+  }
+}
