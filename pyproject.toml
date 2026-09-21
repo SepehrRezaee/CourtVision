@@ -62,6 +62,10 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+markers = [
+  "model: requires detector weights or downloads one (kept out of CI)",
+  "slow: takes more than a few seconds (HOTA/TrackEval runs)",
+]
 
 [tool.ruff]
 line-length = 100

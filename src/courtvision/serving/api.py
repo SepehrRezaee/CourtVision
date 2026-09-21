@@ -35,7 +35,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 from .. import __version__
@@ -146,16 +146,21 @@ class JobStore:
             if self._runner is None:
                 raise RuntimeError("No job runner is configured")
             result = self._runner(job)
-            with self._lock:
-                job.result, job.state = result, "succeeded"
         except Exception as exc:
             LOGGER.warning("job %s failed: %s", job_id, exc)
             with self._lock:
                 job.state, job.error = "failed", f"{type(exc).__name__}: {exc}"
-        finally:
+        else:
             with self._lock:
-                job.finished_at = _now()
+                job.result = result
+        finally:
+            # Publish completion only after the upload is gone: a client that sees
+            # "succeeded" must never race a still-present temporary file.
             self._cleanup(job_id)
+            with self._lock:
+                if job.state == "running":
+                    job.state = "succeeded"
+                job.finished_at = _now()
 
     def _cleanup(self, job_id: str) -> None:
         with self._lock:
@@ -234,6 +239,30 @@ class ApplicationState:
     metrics: Any = None
 
 
+def _analyze_form(
+    tracker: Annotated[str | None, Form()] = None,
+    conf: Annotated[float, Form(gt=0.0, le=1.0)] = 0.25,
+    imgsz: Annotated[int, Form(ge=32, le=4096)] = 640,
+    max_frames: Annotated[int | None, Form(ge=1)] = None,
+    detail: Annotated[str, Form(pattern="^(summary|tracks|full)$")] = "summary",
+    include_events: Annotated[bool, Form()] = True,
+) -> AnalyzeForm:
+    """Bind the multipart form fields into a validated :class:`AnalyzeForm`.
+
+    This must read from ``Form``, not ``Depends()``: a Pydantic model used directly as a
+    dependency binds from the **query string**, which would silently ignore the documented
+    multipart parameters and accept ``conf=1.5`` at its default.
+    """
+    return AnalyzeForm(
+        tracker=tracker,
+        conf=conf,
+        imgsz=imgsz,
+        max_frames=max_frames,
+        detail=detail,  # type: ignore[arg-type]
+        include_events=include_events,
+    )
+
+
 def create_app(
     serving: ServingConfig | None = None,
     api_config: ApiConfig | None = None,
@@ -284,6 +313,9 @@ def create_app(
     @app.middleware("http")
     async def request_context(request: Request, call_next):
         request_id = request.headers.get("x-request-id") or uuid.uuid4().hex[:16]
+        # Handlers and error responses read the id from request.state; without this the
+        # response payload's request_id field would always be empty.
+        request.state.request_id = request_id
         started = time.perf_counter()
         response = await call_next(request)
         elapsed_ms = (time.perf_counter() - started) * 1000.0
@@ -348,13 +380,20 @@ def create_app(
         return payload
 
     @app.post("/v1/analyze", response_model=AnalysisResponse, tags=["v1"])
-    def analyze(request: Request, form: Annotated[AnalyzeForm, Depends()], video: UploadFile = File(...)) -> AnalysisResponse:
+    def analyze(
+        request: Request,
+        form: Annotated[AnalyzeForm, Depends(_analyze_form)],
+        video: UploadFile = File(...),
+    ) -> AnalysisResponse:
         """Analyse an uploaded video synchronously; use /v1/jobs for long clips."""
         _assert_ready(service)
         return AnalysisResponse(**_analyze_upload(state, video, form, request_id=getattr(request.state, "request_id", "")))
 
     @app.post("/v1/jobs", response_model=JobAccepted, status_code=202, tags=["v1"])
-    def submit_job(form: Annotated[AnalyzeForm, Depends()], video: UploadFile = File(...)) -> JobAccepted:
+    def submit_job(
+        form: Annotated[AnalyzeForm, Depends(_analyze_form)],
+        video: UploadFile = File(...),
+    ) -> JobAccepted:
         """Queue an analysis and return immediately with a job id."""
         _assert_ready(service)
         working_dir, path, size = _store_upload(state, video)

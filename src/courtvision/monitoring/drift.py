@@ -137,8 +137,18 @@ def population_stability_index(reference_counts, current_counts, *, epsilon: flo
 
 
 def histogram_counts_with_edges(values: Sequence[float] | np.ndarray, edges: Sequence[float]) -> np.ndarray:
-    """Histogram onto *given* edges, so two batches share bins."""
-    counts, _ = np.histogram(np.asarray(list(values), dtype=float), bins=np.asarray(edges, dtype=float))
+    """Histogram onto *given* edges, so two batches share bins.
+
+    Values outside the reference range are clipped into the edge bins rather than
+    dropped: ``np.histogram`` discards out-of-range samples, which would make extreme
+    drift (all mass far outside the reference) read as a smaller shift than a mild one.
+    Clipping keeps that mass visible in the tails.
+    """
+    edges = np.asarray(edges, dtype=float)
+    values = np.asarray(list(values), dtype=float)
+    if values.size:
+        values = np.clip(values, edges[0], edges[-1])
+    counts, _ = np.histogram(values, bins=edges)
     return counts
 
 

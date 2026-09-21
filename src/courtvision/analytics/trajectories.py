@@ -303,71 +303,88 @@ class TrackTrajectory:
     def fill_gaps(self, *, max_gap: int = 0) -> tuple[TrackTrajectory, np.ndarray]:
         """Linearly interpolate gaps of at most ``max_gap`` frames.
 
-        Returns ``(trajectory, interpolated_mask)``. Longer gaps are left alone: linear
-        interpolation over a long absence invents a path the object never travelled.
+        Returns ``(trajectory, interpolated_mask)``. Interpolated samples carry
+        ``confidence 0.0`` and ``mask True`` so callers can exclude them from statistics.
+        A gap longer than ``max_gap`` is never bridged — linear interpolation over a long
+        absence invents a path the object never travelled — so the returned trajectory
+        simply **ends before** such a gap, and unobserved leading frames are skipped
+        rather than fabricated.
         """
         if max_gap <= 0 or self.is_contiguous:
             return self, np.zeros(len(self), dtype=bool)
 
-        targets = list(range(self.start_frame, self.end_frame + 1))
+        targets = [int(frame) for frame in range(self.start_frame, self.end_frame + 1)]
         known = {int(frame): index for index, frame in enumerate(self.frames)}
         centers, areas = self.centers, self.areas
         sides = np.sqrt(np.maximum(areas, 0.0))
-        new_centers = np.empty((len(targets), 2), dtype=float)
-        new_sides = np.empty(len(targets), dtype=float)
-        new_conf = np.zeros(len(targets), dtype=float)
-        mask = np.zeros(len(targets), dtype=bool)
-        fillable: list[int] = []
+
+        out_frames: list[int] = []
+        out_centers: list[list[float]] = []
+        out_sides: list[float] = []
+        out_conf: list[float] = []
+        out_mask: list[bool] = []
+        pending: list[int] = []
+        last_known: int | None = None
 
         for position, frame in enumerate(targets):
             if frame in known:
-                if fillable:
-                    before, after = targets[fillable[0] - 1], targets[position]
-                    index_before, index_after = known[before], known[after]
-                    span = after - before
-                    for gap_position in fillable:
-                        weight = (targets[gap_position] - before) / span
-                        new_centers[gap_position] = centers[index_before] * (1 - weight) + centers[index_after] * weight
-                        new_sides[gap_position] = sides[index_before] * (1 - weight) + sides[index_after] * weight
-                        mask[gap_position] = True
-                    fillable = []
                 index = known[frame]
-                new_centers[position] = centers[index]
-                new_sides[position] = sides[index]
-                new_conf[position] = self.confidences[index]
-            elif len(fillable) < max_gap:
-                fillable.append(position)
+                if pending:
+                    if last_known is None:
+                        # Frames before the track's first observation: the track simply
+                        # starts here, there is nothing to interpolate toward.
+                        pending = []
+                    else:
+                        before_index = known[last_known]
+                        span = frame - last_known
+                        for gap_position in pending:
+                            weight = (targets[gap_position] - last_known) / span
+                            blended = centers[before_index] * (1 - weight) + centers[index] * weight
+                            out_centers.append(blended.tolist())
+                            out_sides.append(float(sides[before_index] * (1 - weight) + sides[index] * weight))
+                            out_conf.append(0.0)
+                            out_mask.append(True)
+                            out_frames.append(targets[gap_position])
+                    pending = []
+                out_frames.append(frame)
+                out_centers.append(centers[index].tolist())
+                out_sides.append(float(sides[index]))
+                out_conf.append(float(self.confidences[index]))
+                out_mask.append(False)
+                last_known = frame
+            elif last_known is not None and len(pending) < max_gap:
+                pending.append(position)
+            elif last_known is None:
+                continue
             else:
+                # A gap longer than max_gap: stop here. Continuing would either invent
+                # motion across it or emit uninitialised array contents.
                 break
-        else:
-            # Trailing gap: nothing to interpolate toward, so trim it.
-            keep = len(targets) - len(fillable)
-            targets, new_centers, new_sides, new_conf, mask = (
-                targets[:keep],
-                new_centers[:keep],
-                new_sides[:keep],
-                new_conf[:keep],
-                mask[:keep],
-            )
 
+        if not out_frames:  # pragma: no cover - a trajectory always has known frames
+            return self, np.zeros(len(self), dtype=bool)
+
+        frames = np.array(out_frames, dtype=int)
+        filled = np.asarray(out_centers, dtype=float).reshape(-1, 2)
+        sizes = np.asarray(out_sides, dtype=float)
         xyxy = np.stack(
             [
-                new_centers[:, 0] - new_sides / 2,
-                new_centers[:, 1] - new_sides / 2,
-                new_centers[:, 0] + new_sides / 2,
-                new_centers[:, 1] + new_sides / 2,
+                filled[:, 0] - sizes / 2,
+                filled[:, 1] - sizes / 2,
+                filled[:, 0] + sizes / 2,
+                filled[:, 1] + sizes / 2,
             ],
             axis=1,
         )
         return (
             TrackTrajectory(
                 track_id=self.track_id,
-                frames=np.array(targets, dtype=int),
+                frames=frames,
                 xyxy=xyxy,
-                confidences=new_conf,
+                confidences=np.asarray(out_conf, dtype=float),
                 class_id=self.class_id,
             ),
-            mask,
+            np.asarray(out_mask, dtype=bool),
         )
 
     def to_dict(self, *, include_points: bool = False) -> dict:
